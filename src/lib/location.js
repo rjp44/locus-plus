@@ -3,11 +3,13 @@ import phonetic from 'alpha-bravo';
 import { decompress} from 'compress-json'
 
 const places = decompress(require('../places.json'));
+
 export default class Location {
 
     constructor() {
-        this.position = new Promise((resolve, reject) =>
-            navigator.geolocation.getCurrentPosition(position => {
+        let geolocation = navigator.geolocation || global.navigator.geolocation;
+        this.position = new Promise((resolve, reject) => 
+            geolocation.getCurrentPosition(position => {
                 this.build(position.coords);
                 resolve(this);
             }, 
@@ -25,6 +27,7 @@ export default class Location {
             longitude,
             altitude
         } = position;
+      
         Object.assign(this, {
             latitude,
             longitude,
