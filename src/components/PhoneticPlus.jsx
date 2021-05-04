@@ -11,7 +11,7 @@ function PhoneticPlus(props) {
         let l = new Location();
         l.position
             .then(position => setLocation({ ...position }))
-            .catch(err => setLocation({ ...err }))
+            .catch(err => setLocation({ err }))
     }, []);
 
     return (
