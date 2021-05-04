@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../open-location-code"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}
