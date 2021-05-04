@@ -20,6 +20,7 @@ let placeHierarchy = new Map([
     ['Hamlet', 20],
     ['Village', 30],
     ['Town', 40],
+    ['Island', 42],
     ['Other Settlement', 45],
     ['City', 50]
 ]);
