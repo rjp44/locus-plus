@@ -17,12 +17,11 @@ let opts = { headers: headerLine.split(',') };
 
 
 let placeHierarchy = new Map([
-    ['Other Settlement', 1],
-    ['Hamlet', 2],
-    ['Village', 3],
-    ['Town', 4],
-    ['City', 5],
-    ['County', 6]
+    ['Hamlet', 20],
+    ['Village', 30],
+    ['Town', 40],
+    ['Other Settlement', 45],
+    ['City', 50]
 ]);
 
 if (!placeHierarchy.has(SMALLESTPLACE)) {
