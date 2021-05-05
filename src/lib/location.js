@@ -4,6 +4,7 @@ import { decompress} from 'compress-json'
 
 const places = decompress(require('../places.json'));
 
+
 export default class Location {
 
     constructor() {
@@ -27,30 +28,46 @@ export default class Location {
             longitude,
             altitude
         } = position;
-      
+        let plusCode = OpenLocationCode.encode(latitude, longitude, OpenLocationCode.CODE_PRECISION_EXTRA);
+        let seenCode = {};
         Object.assign(this, {
             latitude,
             longitude,
             altitude,
-            plusCode: OpenLocationCode.encode(latitude, longitude, OpenLocationCode.CODE_PRECISION_EXTRA)
+            plusCode
         });
-        // Do an any prefix length match on up to the first 8 chars of our code with the known places codes.
-        let nameCode = this.plusCode.slice(0, 8);
-        while (nameCode.length >= 3) {
-            let reference = places[nameCode];
-            let shortCode = this.plusCode;
-            // If we have a place, and it can be used to shorten the plus code then add it as an alternative
-            if (reference) {
-                shortCode = OpenLocationCode.shorten(this.plusCode, reference.lat, reference.long);
-                if (shortCode !== this.plusCode) {
-                    let anchor = `, ${reference.name} ${reference.country}`;
-                    this.shortCodes.push(shortCode + anchor)
-                    this.phoneticCodes.push(phonetic.returnAsString(shortCode).replace(/\+/, 'plus') + anchor);
-                }
-            }
-            nameCode = nameCode.slice(0, -1);
-        }
-        // Backstop is the full code, no shortening possible.
+        let references = [
+            plusCode.slice(0, 4),
+            plusCode.slice(0, 6),
+            plusCode.slice(0, 8),
+            plusCode.slice(0, 11)
+        ]
+            .reduce((o, code) => o.concat(places[code] || []), [])
+            .map(r => ({
+                ...r,
+                distance: (r.lat - latitude) ** 2 + (r.long - longitude) ** 2,
+                shortCode: OpenLocationCode.shorten(this.plusCode, r.lat, r.long)
+            }))
+            .filter(r => r.shortCode.length !== plusCode.length)
+            .sort((a, b) => {
+              let res = a.shortCode.length - b.shortCode.length;
+              if (res === 0)
+                 res = b.hierarchy - a.hierarchy;
+              if (res === 0)
+                 res = a.distance - b.distance;
+              return (res);
+            })
+            .map(r => ({
+                ...r,
+                shortCode: r.shortCode + `, ${r.name} ${r.country}`,
+                phoneticCode: phonetic.returnAsString(r.shortCode).replace(/\+/, 'plus') + `, ${r.name} ${r.country}`
+            }))
+  
+            .filter(r => !(seenCode[r.shortCode] || !(seenCode[r.shortCode] = true)))
+     
+        let [shortCodes, phoneticCodes] = [references.map(r => r.shortCode).slice(0, 5), references.map(r => r.phoneticCode).slice(0, 5)];
+        Object.assign(this, { shortCodes, phoneticCodes });
+
         this.shortCodes.push(this.plusCode)
         this.phoneticCodes.push(phonetic.returnAsString(this.plusCode).replace(/\+/, 'plus'));
         // Primary short and phonetic codes are the longest prefixes we found first.

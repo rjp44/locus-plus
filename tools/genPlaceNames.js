@@ -18,10 +18,9 @@ let opts = { headers: headerLine.split(',') };
 
 let placeHierarchy = new Map([
     ['Hamlet', 20],
+    ['Other Settlement', 30],
     ['Village', 30],
     ['Town', 40],
-    ['Island', 42],
-    ['Other Settlement', 45],
     ['City', 50]
 ]);
 
@@ -30,7 +29,10 @@ if (!placeHierarchy.has(SMALLESTPLACE)) {
     process.exit(1);
 }
 
+let threshold = placeHierarchy.get(SMALLESTPLACE);
+
 let places = {};
+let reservePlaces = {};
 
 // If we have more than 1 place of the same type in the same digit square then we choose the
 // one with the simplest name. We really don't like big complex names with spaces, hyphens and
@@ -44,42 +46,45 @@ parseFile(DATAFILE, opts)
         let { LOCAL_TYPE: type, GEOMETRY_X: easting, GEOMETRY_Y: northing, NAME1: name, NAME2: altName, POSTCODE_DISTRICT: postcode, COUNTRY: country } = row;
         let hierarchy = placeHierarchy.get(row.LOCAL_TYPE);
         // The OS dataset is huge, we are only interested in identifiable settlements.
-        if (hierarchy >= placeHierarchy.get(SMALLESTPLACE)) {
+        if (hierarchy > 0) {
             let point = new OsGridRef(easting, northing);
             let { _lat: lat, _lon: long } = OsGridRef.osGridToLatLong(point);
             let plusCode = OpenLocationCode.encode(lat, long);
             // Now we have the plus code for the point at the centre of our thing, lets zoom in and record associations
-            // with smaller and smaller tile areas, optomisticaly down to all first 8 digits.
+            // with smaller and smaller tile areas, optomisticaly down to all first 10 digits (11 because of +).
             let codes = [
-                plusCode.slice(0, 3),
                 plusCode.slice(0, 4),
-                plusCode.slice(0, 5),
-                plusCode.slice(0, 7),
+                plusCode.slice(0, 6),
                 plusCode.slice(0, 8),
+                plusCode.slice(0, 11)
             ];
+            let place = {
+              type,
+              name,
+              altName,
+              hierarchy,
+              lat,
+              long,
+              postcode,
+              country
+            };
             codes.forEach(code => {
+                let list = (hierarchy > threshold) ? places : reservePlaces;
                 // If there is no place associated with this tile, or there is but this one is a better choice
                 //  because it is more noaable or simpler name to say...
-                if (places[code] === undefined
-                    || places[code].hierarchy < hierarchy
-                    || (places[code].hierarchy === hierarchy && complexity(places[code].name) > complexity(name))
-                )
-                    places[code] = {
-                        type,
-                        name,
-                        altName,
-                        hierarchy,
-                        lat,
-                        long,
-                        code,
-                        postcode,
-                        country
-                    };
+               
+                list[code] = list[code] || [];
+                list[code].push({ ...place, code });
             })
         }
     })
     .on('end', (number) => {
-        // compress and write JSON file.
+        // If we have a small area with no places, or a larger tile with very few, then add the smaller
+        // categories of object in.
+        Object.entries(reservePlaces).forEach(([code, entries]) => {
+            if (places[code] === undefined || (code.length === 6 && places[code].length < 2))
+                places[code] = (places[code] || []).concat(entries);
+        });
         let compressed = compress(places)
         fs.writeFileSync(PLACEDATA, JSON.stringify(compressed));
         console.info(`Parsed ${number} rows`, `wrote ${Object.keys(places).length} places`);

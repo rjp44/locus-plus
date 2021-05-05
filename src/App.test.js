@@ -15,7 +15,7 @@ Object.defineProperty(global.navigator, 'geolocation', {
 });
 
 const locations = [
-  [50.2, -5, "six two two two plus two two two , Truro England"],
+  [50.2, -5, "six two two two plus two two two , Treworlas England"],
   // We have no place name data for NI
   [54.818105429866606, -7.028511272251086, "nine CHARLIE six JULIET ROMEO XRAY nine CHARLIE plus six HOTEL XRAY"],
   [51.52573553231748, -0.08370366791166943, "GOLF WHISKEY GOLF eight plus seven GOLF VICTOR , Bethnal Green England"],
