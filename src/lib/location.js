@@ -30,6 +30,7 @@ export default class Location {
         } = position;
         let plusCode = OpenLocationCode.encode(latitude, longitude, OpenLocationCode.CODE_PRECISION_EXTRA);
         let seenCode = {};
+
         Object.assign(this, {
             latitude,
             longitude,
@@ -50,17 +51,17 @@ export default class Location {
             }))
             .filter(r => r.shortCode.length !== plusCode.length)
             .sort((a, b) => {
-              let res = a.shortCode.length - b.shortCode.length;
+               let res = a.shortCode.length - b.shortCode.length;
+               if (res === 0)
+                 res = a.distance - b.distance;
               if (res === 0)
                  res = b.hierarchy - a.hierarchy;
-              if (res === 0)
-                 res = a.distance - b.distance;
               return (res);
             })
             .map(r => ({
                 ...r,
-                shortCode: r.shortCode + `, ${r.name} ${r.country}`,
-                phoneticCode: phonetic.returnAsString(r.shortCode).replace(/\+/, 'plus') + `, ${r.name} ${r.country}`
+                shortCode: r.shortCode.trim() + `, ${r.name} ${r.country}`,
+                phoneticCode: phonetic.returnAsString(r.shortCode).replace(/\+/, 'plus').trim() + `, ${r.name}, ${r.country}`
             }))
   
             .filter(r => !(seenCode[r.shortCode] || !(seenCode[r.shortCode] = true)))
