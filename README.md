@@ -1,6 +1,37 @@
 # locus-plus
 
-Mobile app which spells out the plus code for the current location phonetically.
+Simple prototype web app which shortens and spells out the [Open Location Code](https://en.wikipedia.org/wiki/Open_Location_Code) for the current device location phonetically. This is mostly useless as there are any number of applications like SARLOC which send the location directly to an emergency response org, but apparently being able to communicate concise error free locations verbally is still a useful tool.
+
+Try it at [locus.plus](https://locus.plus).
+
+Designed to be used offine if required, it uses no external services to produce the code. It would be very simple to develop an inverse application which allows the displayed codes to be typed in and reverse the process to arrive at a lat/lon or OS grid reference, again without using any external services outside of this codebase.
+
+For now it can be used and demonstrated just by typing the spelled out plus code into an application like Google maps which understands them natively.
+
+![locus-plus output](images/locus-plus.png)
+![into Google Maps](images/maps-detail.png)
+## TODO
+
+This is a hack, there are some things very wrong with it. If it were, or becomes a real project these would be tracked with issues.
+
+ * Should ask for a gesture before calling location services.
+ * Present the alternates list as a "try another" button, or maybe not at all if we make better choices for primary pronunciation but all that would require actual design.
+ * Maybe Gaelic and welsh native place names shouldn't be favoured as primary unless browser Locale indicates they should.
+ * Add Northern Ireland [Open PLace Name data](https://www.opendatani.gov.uk/).
+ * Interrogate fuzzy OLC code buckets (one digit either side lat/lon) to get adjacent tile matches.
+ * Make database much smaller: 8MB of JSON at present, but lots of ways to optimise.
+ * Related to previous one, algorithm for reference point density could be a lot better. It is currently "If there aren't many in a tile, chuck lots more in from a reserve list of fine grained data points, oh look now we have lots of silly reference points".
+ * Introduce some design (see 1-2).
+ * Enable PWA for offline use.
+
+
+## How
+
+Based on OLC (Google maps Plus codes) spelt out onscreen phonetically. Problem is they get a little long and unwieldy and can therefore be error prone. Single digit errors could place the location many many miles away.
+
+Thankfully the OLC spec allows a truncated code to be be used, along with a reference point. There is then more redundancy in the remaining digits and human error checking on the reference location which would be know to a local response operator is possible. This narrows the range of errors.
+
+We process the [Ordnance Survey Open Names](https://www.ordnancesurvey.co.uk/business-government/products/open-map-names) data to convert from OSGB to WGS84 Lat/Lon and create an overlay with multiple reference locations spread as evenly as possible over the GB landmass. This gives short OLC codes without having to resort to online services like Google Maps which may not be available when the app is being used because data isn't available.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

@@ -4,7 +4,8 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-          <PhoneticPlus/>
+      <PhoneticPlus />
+      <p> Source: Github  <a href="https://github.com/rjp44/locus-plus"> rjp44/locus-plus </a></p>
     </div>
   );
 }
