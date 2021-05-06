@@ -8,6 +8,8 @@
     "@testing-library/user-event": "^12.1.10",
     "alpha-bravo": "^2.0.2",
     "compress-json": "^1.0.4",
+    "mt-coordtransform": "^0.1.0",
+    "mt-latlon": "^0.1.2",
     "open-location-code": "https://github.com/rjp44/open-location-code.git",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
