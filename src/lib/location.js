@@ -64,8 +64,7 @@ export default class Location {
   _buildShortCodes(position) {
     let {
       latitude,
-      longitude,
-      altitude
+      longitude
     } = position;
     let plusCode = this.plusCode;
     let seenCode = {};
