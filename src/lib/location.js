@@ -136,8 +136,14 @@ export default class Location {
     if (!this._position?.latitude)
       return undefined;
     if (!this._osGridRef) {
-      let latlon = new LatLon(this._position.latitude, this._position.longitude);
-      this._osGridRef = latlon.toOsGrid().toString();
+      try {
+        let latlon = new LatLon(this._position.latitude, this._position.longitude);
+        this._osGridRef = latlon.toOsGrid().toString();
+      }
+      catch (err) {
+        // We are OOB for OS, just record nothing
+        console.info(err);
+      }
     }
     return this._osGridRef;
   }
