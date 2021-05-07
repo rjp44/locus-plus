@@ -14,14 +14,12 @@ For now it can be used and demonstrated just by typing the spelled out plus code
 
 This is a hack, there are some things very wrong with it. If it were, or becomes a real project these would be tracked with issues.
 
- * Should ask for a gesture before calling location services.
- * Present the alternates list as a "try another" button, or maybe not at all if we make better choices for primary pronunciation but all that would require actual design.
  * Maybe Gaelic and welsh native place names shouldn't be favoured as primary unless browser Locale indicates they should.
  * Add Northern Ireland [Open PLace Name data](https://www.opendatani.gov.uk/).
  * Interrogate fuzzy OLC code buckets (one digit either side lat/lon) to get adjacent tile matches.
  * Make database much smaller: 8MB of JSON at present, but lots of ways to optimise.
  * Related to previous one, algorithm for reference point density could be a lot better. It is currently "If there aren't many in a tile, chuck lots more in from a reserve list of fine grained data points, oh look now we have lots of silly reference points".
- * Introduce some design (see 1-2).
+ * Introduce some design.
  * Enable PWA for offline use.
 
 

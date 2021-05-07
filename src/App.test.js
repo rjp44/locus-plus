@@ -30,10 +30,9 @@ const failLocation = {
 
 test('renders initial empty location', () => {
 
-
   render(<App />);
-  const locationElement = screen.getByText(/Dont know yet, please allow location access/i);
-  expect(locationElement).toBeInTheDocument();
+  const locationElement = screen.getByTestId('phonetic');
+  expect(locationElement).toBeEmptyDOMElement();
 });
 
 
@@ -44,6 +43,7 @@ test('renders when location resolves', async () => {
     global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => cb({ coords: { latitude, longitude } }));
     await act(async () => {
       ({ unmount } = render(< App />));
+      fireEvent.click(screen.getByText('Get Location'));
     });
     await expect(screen.getByText(results[0])).toBeInTheDocument();
     await expect(screen.getByText('Try Another Spelling')).toBeInTheDocument();
@@ -63,6 +63,7 @@ test('renders error when location rejects', async () => {
   global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => errcb(failLocation.err));
   await act(async () => {
     render(<App />);
+    fireEvent.click(screen.getByText('Get Location'));
   });
   expect(screen.getByText(failLocation.err)).toBeInTheDocument();
 });

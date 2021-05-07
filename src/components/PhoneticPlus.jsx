@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Location from '../lib/location';
 
 function PhoneticPlus(props) {
   const [location, setLocation] = useState(
     {
-      holding: 'Dont know yet, please allow location access',
-      phoneticCodes: []
+      holding: 'Dont have a location yet'
     }
   );
   const [index, setIndex] = useState(0);
 
-  useEffect(() => {
-    // When we are mounted, instantiate a location object and update state when we get a value
+  const getLocation = () => {
+    setLocation({ ...location, fetching: true });
     let lcn = new Location();
     lcn.queryDevice().then(() => {
       setLocation({
@@ -21,15 +20,24 @@ function PhoneticPlus(props) {
       });
     })
       .catch(err => setLocation({ err }));
-  }, []);
+  }
 
   return (
     <div>
-      <h1>You are at</h1>
-      <p key="phonetic">{location?.phoneticCodes?.[index] || location.holding || location.err}</p>
+      {location.phoneticCode && <h1>You are at</h1>}
+
+      <p key="phonetic" data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</p>
+      
       {location?.phoneticCodes?.length && <button onClick={() => setIndex((index + 1) % location.phoneticCodes.length)}>Try Another Spelling</button>}
-      <h3>or Just</h3>
-      <p>{location.plusCode}</p>
+      
+      {location.plusCode &&
+        (<>
+        <h3>or Just</h3>
+        <p>{location.plusCode}</p>
+        </>)
+      }
+      
+      <button onClick={getLocation}>{(location.phoneticCode) ? 'Update' : 'Get'} Location</button>
     </div>
   );
 
