@@ -20,7 +20,9 @@ function PhoneticPlus(props) {
         osGridRef: lcn.osGridRef
       });
     })
-      .catch(err => setLocation({ err }));
+      .catch(err => setLocation({
+        err: `Something went wrong, please allow location access: ${err.message}`
+      }));
   }
 
   return (

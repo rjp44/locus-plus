@@ -56,7 +56,8 @@ const locations = [
 
 
 const failLocation = {
-  err: 'Something went wrong, please enable location services'
+  code: 1,
+  message: 'User denied access'
 };
 
 test('renders initial empty location', () => {
@@ -91,12 +92,12 @@ test('renders when location resolves', async () => {
 
 
 test('renders error when location rejects', async () => {
-  global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => errcb(failLocation.err));
+  global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => errcb( failLocation ));
   await act(async () => {
     render(<App />);
     fireEvent.click(screen.getByText('Get Location'));
   });
-  expect(screen.getByText(failLocation.err)).toBeInTheDocument();
+  expect(screen.getByText(`Something went wrong, please allow location access: ${failLocation.message}`)).toBeInTheDocument();
 });
 
 
