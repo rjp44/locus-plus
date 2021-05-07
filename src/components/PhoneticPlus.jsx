@@ -16,7 +16,8 @@ function PhoneticPlus(props) {
       setLocation({
         phoneticCode: lcn.phoneticCode,
         plusCode: lcn.plusCode,
-        phoneticCodes: lcn.phoneticCodes(5)
+        phoneticCodes: lcn.phoneticCodes(5),
+        osGridRef: lcn.osGridRef
       });
     })
       .catch(err => setLocation({ err }));
@@ -36,6 +37,8 @@ function PhoneticPlus(props) {
         <p>{location.plusCode}</p>
         </>)
       }
+
+      {location.osGridRef && <p>OS Grid Ref: <b>{location.osGridRef}</b></p>}
       
       <button onClick={getLocation}>{(location.phoneticCode) ? 'Update' : 'Get'} Location</button>
     </div>

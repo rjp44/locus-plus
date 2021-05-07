@@ -1,4 +1,5 @@
 import OpenLocationCode from "open-location-code/js/src/openlocationcode.js";
+import { LatLon } from 'geodesy/osgridref.js';
 import phonetic from "alpha-bravo";
 import {
   decompress
@@ -119,5 +120,16 @@ export default class Location {
       _shortCode: shortCodes[0],
       _phoneticCode: phoneticCodes[0],
     });
+  }
+
+
+  get osGridRef() {
+    if (!this._position?.latitude)
+      return undefined;
+    if (!this._osGridRef) {
+      let latlon = new LatLon(this._position.latitude, this._position.longitude);
+      this._osGridRef = latlon.toOsGrid().toString();
+    }
+    return this._osGridRef;
   }
 }
