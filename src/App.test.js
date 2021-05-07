@@ -16,12 +16,43 @@ Object.defineProperty(global.navigator, 'geolocation', {
 });
 
 const locations = [
-  [50.2, -5, ["six two two two plus two two two, Philleigh, England", "six two two two plus two two two, Lamorran, England", "six two two two plus two two two, Treworlas, England"]],
-  // We have no place name data for NI
-  [54.818105429866606, -7.028511272251086, ["nine CHARLIE six JULIET ROMEO XRAY nine CHARLIE plus six HOTEL XRAY", "nine CHARLIE six JULIET ROMEO XRAY nine CHARLIE plus six HOTEL XRAY", "nine CHARLIE six JULIET ROMEO XRAY nine CHARLIE plus six HOTEL XRAY"]],
-  [51.52573553231748, -0.08370366791166943, ["GOLF eight plus seven GOLF VICTOR, City of London, England", "GOLF WHISKEY GOLF eight plus seven GOLF VICTOR, Bethnal Green, England", "GOLF WHISKEY GOLF eight plus seven GOLF VICTOR, Hackney, England"]],
-  [55.57626681325015, -5.145275200193704, ["GOLF three plus GOLF VICTOR five, Brodick, Scotland", "GOLF three plus GOLF VICTOR five, Strathwhillan, Scotland", "HOTEL VICTOR GOLF three plus GOLF VICTOR five, North Corriegills, Scotland"]]
-];
+  [
+    50.2,
+    -5,
+    [
+      'Six Two Two Two Plus Two Two Two, Philleigh, England',
+      'Six Two Two Two Plus Two Two Two, Lamorran, England',
+      'Six Two Two Two Plus Two Two Two, Treworlas, England'
+    ]
+  ],
+  [
+    54.818105429866606,
+    -7.028511272251086,
+    [
+      'Nine Charlie Six Juliet Romeo Xray Nine Charlie Plus Six Hotel Xray',
+      'Nine Charlie Six Juliet Romeo Xray Nine Charlie Plus Six Hotel Xray',
+      'Nine Charlie Six Juliet Romeo Xray Nine Charlie Plus Six Hotel Xray'
+    ]
+  ],
+  [
+    51.52573553231748,
+    -0.08370366791166943,
+    [
+      'Golf Eight Plus Seven Golf Victor, City of London, England',
+      'Golf Whiskey Golf Eight Plus Seven Golf Victor, Bethnal Green, England',
+      'Golf Whiskey Golf Eight Plus Seven Golf Victor, Hackney, England'
+    ]
+  ],
+  [
+    55.57626681325015,
+    -5.145275200193704,
+    [
+      'Golf Three Plus Golf Victor Five, Brodick, Scotland',
+      'Golf Three Plus Golf Victor Five, Strathwhillan, Scotland',
+      'Hotel Victor Golf Three Plus Golf Victor Five, North Corriegills, Scotland'
+    ]
+  ]
+]
 
 
 const failLocation = {

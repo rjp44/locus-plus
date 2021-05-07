@@ -62,7 +62,19 @@ export default class Location {
     return this.shortCode && this._phoneticCodes.slice(0, num);
   }
 
+
+
   _buildShortCodes(position) {
+
+    function toPhonetic(str) {
+      return phonetic.returnAsString(str)
+        .replace(/\+/, "plus")
+        .trim()
+        .split(' ')
+        .map((word) => (word[0].toUpperCase() + word.toLowerCase().substring(1)))
+        .join(" ");
+    }
+
     let {
       latitude,
       longitude
@@ -97,8 +109,7 @@ export default class Location {
       .map((r) => ({
         ...r,
         shortCode: r.shortCode.trim() + `, ${r.name} ${r.country}`,
-        phoneticCode: phonetic.returnAsString(r.shortCode).replace(/\+/, "plus").trim() +
-          `, ${r.name}, ${r.country}`,
+        phoneticCode: `${toPhonetic(r.shortCode)}, ${r.name}, ${r.country}`,
       }))
       // remove dups
       .filter(
@@ -111,9 +122,7 @@ export default class Location {
     ];
     // Push the full code as a backstop.
     shortCodes.push(this.plusCode);
-    phoneticCodes.push(
-      phonetic.returnAsString(this.plusCode).replace(/\+/, "plus")
-    );
+    phoneticCodes.push(toPhonetic(this.plusCode));
     Object.assign(this, {
       _shortCodes: shortCodes,
       _phoneticCodes: phoneticCodes,

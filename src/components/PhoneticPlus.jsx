@@ -27,14 +27,13 @@ function PhoneticPlus(props) {
     <div>
       {location.phoneticCode && <h1>You are at</h1>}
 
-      <p key="phonetic" data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</p>
+      <p key="phonetic"><b data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</b></p>
       
       {location?.phoneticCodes?.length && <button onClick={() => setIndex((index + 1) % location.phoneticCodes.length)}>Try Another Spelling</button>}
       
       {location.plusCode &&
         (<>
-        <h3>or Just</h3>
-        <p>{location.plusCode}</p>
+        <p>Full Code <b>{location.plusCode}</b></p>
         </>)
       }
 
