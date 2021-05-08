@@ -38,6 +38,7 @@ const locations = [
     51.52573553231748, -0.08370366791166943,
     [
       'Golf Eight Plus Seven Golf Victor, City of London, England',
+      'Golf Whiskey Golf Eight Plus Seven Golf Victor, Southwark, England',
       'Golf Whiskey Golf Eight Plus Seven Golf Victor, Bethnal Green, England',
       'Golf Whiskey Golf Eight Plus Seven Golf Victor, Hackney, England'
     ],

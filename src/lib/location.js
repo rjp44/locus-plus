@@ -1,11 +1,8 @@
 import OpenLocationCode from "open-location-code/js/src/openlocationcode.js";
 import { LatLon } from 'geodesy/osgridref.js';
 import phonetic from "alpha-bravo";
-import {
-  decompress
-} from "compress-json";
 
-const places = decompress(require("../places.json"));
+const places = require("../places.json");
 
 export default class Location {
 
@@ -82,7 +79,6 @@ export default class Location {
     let plusCode = this.plusCode;
     let seenCode = {};
 
-
     let references = [
       plusCode.slice(0, 4),
       plusCode.slice(0, 6),
@@ -90,7 +86,7 @@ export default class Location {
       plusCode.slice(0, 11),
     ]
       // All of the places in all of the above arrays
-      .reduce((o, code) => o.concat(places[code] || []), [])
+      .reduce((o, code) => o.concat((places[code]||[]).map(id => places[id]) || []), [])
       .map((r) => ({
         ...r,
         // Dont bother with the square root calc, we just want to know which distances are smaller not by how much
