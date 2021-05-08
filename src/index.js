@@ -4,11 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import PWAPrompt from 'react-ios-pwa-prompt';
 
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
+    <PWAPrompt
+      copyBody="Add Locus-Plus to your Home Screen and you will be able to use it at any time. This means you will always be able to read out your location, even if you have no Internet connectivity"
+      permanentlyHideOnDismiss="false"
+    />
   </React.StrictMode>,
   document.getElementById('root')
 );

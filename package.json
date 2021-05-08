@@ -13,6 +13,7 @@
     "open-location-code": "https://github.com/rjp44/open-location-code.git",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-ios-pwa-prompt": "^1.8.4",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.0.1",
     "workbox-background-sync": "^6.1.5",
