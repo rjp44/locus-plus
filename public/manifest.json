@@ -1,6 +1,6 @@
 {
   "short_name": "Locus Plus",
-  "name": "Get Current Device Open Location Code",
+  "name": "Locus Plus: otain location code for current location",
   "icons": [
     {
       "src": "/favicon.ico",

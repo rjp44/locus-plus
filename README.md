@@ -14,13 +14,11 @@ For now it can be used and demonstrated just by typing the spelled out plus code
 
 This is a hack, there are some things very wrong with it. If it were, or becomes a real project these would be tracked with issues.
 
- * Maybe Gaelic and welsh native place names shouldn't be favoured as primary unless browser Locale indicates they should.
+ * Maybe Gaelic and welsh native names should be filtered out as primary placenames unless browser Locale indicates they would be useful.
  * Add Northern Ireland [Open PLace Name data](https://www.opendatani.gov.uk/).
  * Interrogate fuzzy OLC code buckets (one digit either side lat/lon) to get adjacent tile matches.
- * Make database much smaller: 8MB of JSON at present, but lots of ways to optimise.
- * Related to previous one, algorithm for reference point density could be a lot better. It is currently "If there aren't many in a tile, chuck lots more in from a reserve list of fine grained data points, oh look now we have lots of silly reference points".
+ * Algorithm for reference point density could be a lot better. It is currently "If there aren't many in a tile, chuck lots more in from a reserve list of fine grained data points, oh look now we have lots of silly reference points".
  * Introduce some design.
- * Enable PWA for offline use.
 
 
 ## How
