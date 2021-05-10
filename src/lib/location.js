@@ -26,8 +26,8 @@ export default class Location {
   get shortCode() {
     if (!this._position?.latitude)
       return undefined;
-    if (!this._shortCodes)
-      this._buildShortCodes(this._position);
+      if (!this._shortCodes)
+        this._buildShortCodes(this._position);
     return this._shortCodes[0];
   }
 
@@ -40,6 +40,12 @@ export default class Location {
   }
 
 
+  /**
+   *
+   *
+   * @return {*} 
+   * @memberof Location
+   */
   queryDevice() {
     let geolocation = navigator.geolocation || global.navigator.geolocation;
     if (!this.position)
@@ -62,9 +68,38 @@ export default class Location {
   phoneticCodes(num = 5) {
     return this.shortCode && this._phoneticCodes.slice(0, num);
   }
-
-
-
+  /**
+   *
+   * @readonly
+   * @memberof Location
+   */
+  get relatedCodes() {
+    if (this._position?.latitude === undefined)
+      return undefined;
+    if (!this._relatedCodes) {
+      let lengthResolution = { 4: 1.0, 6: 0.05, 8: 0.0025, 10: 0.000125 };
+      // For each code length, 3x3 array of permutations centred on the location +- one digit of precision
+      let permutations = Object.entries(lengthResolution)
+        .map(([length, resolution]) =>
+          [-resolution, 0, resolution].map(xoffset =>
+            [-resolution, 0, resolution].map(yoffset =>
+              OpenLocationCode.encode(this._position.latitude + xoffset, this._position.longitude + yoffset, length)
+                .replace(/0+\+/, '')
+            )
+          )
+        );
+      this._relatedCodes = permutations
+        .reduce((o, l) => o.concat(l), [])
+        .reduce((o, l) => o.concat(l), []);
+    }
+    return this._relatedCodes;
+  }
+  /**
+   *
+   *
+   * @param {*} position
+   * @memberof Location
+   */
   _buildShortCodes(position) {
 
     function toPhonetic(str) {
@@ -83,29 +118,38 @@ export default class Location {
     let plusCode = this.plusCode;
     let seenCode = {};
 
-    let references = [
-      plusCode.slice(0, 4),
-      plusCode.slice(0, 6),
-      plusCode.slice(0, 8),
-      plusCode.slice(0, 11),
-    ]
+    let references = this.relatedCodes
       // All of the places in all of the above arrays
-      .reduce((o, code) => o.concat((places[code]||[]).map(id => places[id]) || []), [])
+      .reduce((o, code) => o.concat((places[code] || []).map(id => places[id]) || []), [])
       .map((r) => ({
         ...r,
         // Dont bother with the square root calc, we just want to know which distances are smaller not by how much
         distance: (r.lat - latitude) ** 2 + (r.long - longitude) ** 2,
         shortCode: OpenLocationCode.shorten(this.plusCode, r.lat, r.long),
       }))
-      .filter((r) => r.shortCode.length !== plusCode.length)
-      .sort((a, b) => {
-        // Primary sort criteria is shortcode length, then distance, then notability
-        let res = a.shortCode.length - b.shortCode.length;
-        res = res || a.distance - b.distance;
-        res = res || b.hierarchy - a.hierarchy;
-        return res;
-      })
+      .filter((r) => r.shortCode.length !== plusCode.length);
+    let size = [].concat(references.sort((a, b) => {
+      // Primary sort criteria is shortcode length, then notability
+      let res = a.shortCode.length - b.shortCode.length;
+      res = res || b.hierarchy - a.hierarchy;
+      res = res || a.distance - b.distance;
+      return res;
+    }))
+    let distance = references.sort((a, b) => {
+      // Primary sort criteria is shortcode length, then distance
+      let res = a.shortCode.length - b.shortCode.length;
+      res = res || a.distance - b.distance;
+      return res;
+    });
+    references = [];
+
+    while (distance.length || size.length) {
+      references.push(distance.shift());
+      references.push(size.shift());
+    }
       // Add reference place name
+    references = references
+      .filter(r => r != null)
       .map((r) => ({
         ...r,
         shortCode: r.shortCode.trim() + `, ${r.name} ${r.country}`,

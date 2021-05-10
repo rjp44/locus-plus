@@ -16,9 +16,8 @@ This is a hack, there are some things very wrong with it. If it were, or becomes
 
  * Maybe Gaelic and welsh native names should be filtered out as primary placenames unless browser Locale indicates they would be useful.
  * Add Northern Ireland [Open PLace Name data](https://www.opendatani.gov.uk/).
- * Interrogate fuzzy OLC code buckets (one digit either side lat/lon) to get adjacent tile matches.
  * Algorithm for reference point density could be a lot better. It is currently "If there aren't many in a tile, chuck lots more in from a reserve list of fine grained data points, oh look now we have lots of silly reference points".
- * Introduce some design.
+
 
 
 ## How

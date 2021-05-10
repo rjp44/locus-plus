@@ -19,9 +19,11 @@ const locations = [
   [
     50.2, -5,
     [
+      'Six Two Two Two Plus Two Two Two, St Just in Roseland, England',
+      'Six Two Two Two Plus Two Two Two, Truro, England',
       'Six Two Two Two Plus Two Two Two, Philleigh, England',
-      'Six Two Two Two Plus Two Two Two, Lamorran, England',
-      'Six Two Two Two Plus Two Two Two, Treworlas, England'
+      'Six Two Two Two Plus Two Two Two, Church Cove, England',
+      'Six Two Two Two Plus Two Two Two, Gerrans, England'
     ],
     'SW 85999 37639'
   ],
@@ -38,8 +40,8 @@ const locations = [
     51.52573553231748, -0.08370366791166943,
     [
       'Golf Eight Plus Seven Golf Victor, Hoxton, England',
-      "Golf Eight Plus Seven Golf Victor, St Luke's, England",
       'Golf Eight Plus Seven Golf Victor, City of London, England',
+      "Golf Eight Plus Seven Golf Victor, St Luke's, England",
       'Golf Eight Plus Seven Golf Victor, Spitalfields, England',
       'Golf Eight Plus Seven Golf Victor, De Beauvoir Town, England'
     ],
@@ -52,7 +54,7 @@ const locations = [
       'Golf Three Plus Golf Victor Five, Invercloy, Scotland',
       'Golf Three Plus Golf Victor Five, Strathwhillan, Scotland',
       'Hotel Victor Golf Three Plus Golf Victor Five, North Corriegills, Scotland',
-      'Hotel Victor Golf Three Plus Golf Victor Five, Glenshurig, Scotland'
+      'Hotel Victor Golf Three Plus Golf Victor Five, Rothesay, Scotland'
     ],
     'NS 01823 35892'
   ],
@@ -61,19 +63,20 @@ const locations = [
     [
       'Hotel Juliet Plus Four Five Mike, Nunthorpe, England',
       'Golf Romeo Hotel Juliet Plus Four Five Mike, Ormesby, England',
+      'Golf Romeo Hotel Juliet Plus Four Five Mike, Middlesbrough, England',
       'Golf Romeo Hotel Juliet Plus Four Five Mike, Marton, England',
-      'Golf Romeo Hotel Juliet Plus Four Five Mike, Park End, England',
-      'Nine Charlie Six Whiskey Golf Romeo Hotel Juliet Plus Four Five Mike'
+      'Golf Romeo Hotel Juliet Plus Four Five Mike, Saltburn-by-the-Sea, England'
     ],
     'NZ 53841 15044'
   ],
   [
     54.4653840350444, -3.1939199054890866,
-    ['Foxtrot Romeo Eight Four Plus Five Charlie Four, Seathwaite, England',
+    [
+      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Seathwaite, England',
+      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Keswick, England',
+      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Broughton in Furness, England',
       'Foxtrot Romeo Eight Four Plus Five Charlie Four, Seatoller, England',
-      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Wasdale Head, England',
-      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Mountain View, England',
-      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Cockley Beck, England'
+      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Cockermouth, England'
     ],
     'NY 22711 08435',
   ],
@@ -81,7 +84,11 @@ const locations = [
     // TODO: be better than this
     57.5671020359238, -4.932249419163916,
     [
-      'Nine Charlie Nine Quebec Hotel Three Eight Nine Plus Romeo Four Romeo'
+      'Hotel Three Eight Nine Plus Romeo Four Romeo, Achanalt, Scotland',
+      'Hotel Three Eight Nine Plus Romeo Four Romeo, Rhiroy, Scotland',
+      'Hotel Three Eight Nine Plus Romeo Four Romeo, Achadh na Sine, Scotland',
+      'Hotel Three Eight Nine Plus Romeo Four Romeo, Blarnalearoch, Scotland',
+      'Hotel Three Eight Nine Plus Romeo Four Romeo, Auchindrean, Scotland'
     ],
     'NH 24716 56792',
   ],
