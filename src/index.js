@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import PWAPrompt from 'react-ios-pwa-prompt';
+import '@fontsource/roboto';
 
 
 ReactDOM.render(
