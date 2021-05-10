@@ -35,6 +35,10 @@ export default class Location {
     return this.shortCode && this._phoneticCodes[0];
   }
 
+  get accuracy() {
+    return this?._position?.accuracy;
+  }
+
 
   queryDevice() {
     let geolocation = navigator.geolocation || global.navigator.geolocation;
@@ -47,7 +51,7 @@ export default class Location {
         }
         )
       )
-        .then(({ latitude, longitude, altitude }) => (this._position = { latitude, longitude, altitude }));
+        .then(({ latitude, longitude, altitude, accuracy }) => (this._position = { latitude, longitude, altitude, accuracy }));
     return this.position;
   }
 

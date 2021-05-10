@@ -17,7 +17,8 @@ function PhoneticPlus(props) {
         phoneticCode: lcn.phoneticCode,
         plusCode: lcn.plusCode,
         phoneticCodes: lcn.phoneticCodes(5),
-        osGridRef: lcn.osGridRef
+        osGridRef: lcn.osGridRef,
+        accuracy: lcn.accuracy
       });
     })
       .catch(err => setLocation({
@@ -30,6 +31,8 @@ function PhoneticPlus(props) {
       {location.phoneticCode && <h1>You are at</h1>}
 
       <p key="phonetic"><b data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</b></p>
+
+      {location.accuracy && <p key="accuracy">Your device reports this is accurate to <b>{location.accuracy}m</b></p>}
       
       {location?.phoneticCodes?.length && <button onClick={() => setIndex((index + 1) % location.phoneticCodes.length)}>Try Another Spelling</button>}
       
