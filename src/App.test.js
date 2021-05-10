@@ -37,10 +37,11 @@ const locations = [
   [
     51.52573553231748, -0.08370366791166943,
     [
+      'Golf Eight Plus Seven Golf Victor, Hoxton, England',
+      "Golf Eight Plus Seven Golf Victor, St Luke's, England",
       'Golf Eight Plus Seven Golf Victor, City of London, England',
-      'Golf Whiskey Golf Eight Plus Seven Golf Victor, Southwark, England',
-      'Golf Whiskey Golf Eight Plus Seven Golf Victor, Bethnal Green, England',
-      'Golf Whiskey Golf Eight Plus Seven Golf Victor, Hackney, England'
+      'Golf Eight Plus Seven Golf Victor, Spitalfields, England',
+      'Golf Eight Plus Seven Golf Victor, De Beauvoir Town, England'
     ],
     'TQ 33035 82498'
   ],
@@ -48,10 +49,23 @@ const locations = [
     55.57626681325015, -5.145275200193704,
     [
       'Golf Three Plus Golf Victor Five, Brodick, Scotland',
+      'Golf Three Plus Golf Victor Five, Invercloy, Scotland',
       'Golf Three Plus Golf Victor Five, Strathwhillan, Scotland',
-      'Hotel Victor Golf Three Plus Golf Victor Five, North Corriegills, Scotland'
+      'Hotel Victor Golf Three Plus Golf Victor Five, North Corriegills, Scotland',
+      'Hotel Victor Golf Three Plus Golf Victor Five, Glenshurig, Scotland'
     ],
     'NS 01823 35892'
+  ],
+  [
+    54.5278259786839, -1.169575190522096,
+    [
+      'Hotel Juliet Plus Four Five Mike, Nunthorpe, England',
+      'Golf Romeo Hotel Juliet Plus Four Five Mike, Ormesby, England',
+      'Golf Romeo Hotel Juliet Plus Four Five Mike, Marton, England',
+      'Golf Romeo Hotel Juliet Plus Four Five Mike, Park End, England',
+      'Nine Charlie Six Whiskey Golf Romeo Hotel Juliet Plus Four Five Mike'
+    ],
+    'NZ 53841 15044'
   ],
   [ // Salt Lake UT Airport: Checks we silently ignore an OSGR OOB error
     40.798513673669625, -111.97667318876773,

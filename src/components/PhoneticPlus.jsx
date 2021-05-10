@@ -28,6 +28,7 @@ function PhoneticPlus(props) {
 
   return (
     <div>
+
       {location.phoneticCode && <h1>You are at</h1>}
 
       <p key="phonetic"><b data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</b></p>
