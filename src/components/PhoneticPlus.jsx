@@ -5,6 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
   row: {
     flexGrow: 1,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     textAlign: 'center',
   },
   wrapper: {
@@ -68,7 +69,9 @@ export default function PhoneticPlus(props) {
     <div className={classes.root}>
       <Grid container>
         <Grid item xs={12} className={classes.row}>
-          <Typography variant="h4" data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</Typography>
+          <Paper margin={5}>
+            <Typography variant="h5" data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</Typography>
+          </Paper>
         </Grid>
         <Grid item xs={12} className={classes.row}>
           {location?.phoneticCodes?.length && <Button variant="contained" color="primary" onClick={() => setIndex((index + 1) % location.phoneticCodes.length)}>Try Another Spelling</Button>}
