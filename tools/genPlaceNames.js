@@ -2,8 +2,6 @@ const OsGridRef = require('mt-osgridref');
 const fs = require('fs');
 const { parseFile } = require('fast-csv');
 const OpenLocationCode = require('open-location-code/js/src/openlocationcode.js');
-const { exit } = require('process');
-//const { compress } = require('compress-json');
 
 
 const HEADERFILE = '../data/OS_Open_Names_Header.csv'
@@ -15,7 +13,6 @@ const SMALLESTPLACE = 'Town'
 // Header is in a separate file with OS data
 let headerLine = fs.readFileSync(HEADERFILE, {encoding: 'UTF8'});
 let opts = { headers: headerLine.trim().split(',') };
-console.log(opts);
 
 
 let placeHierarchy = new Map([
@@ -92,7 +89,6 @@ parseFile(DATAFILE, opts)
             entries.forEach(entry => (places[entry] = reservePlaces[entry]));
           }
         });
-//        places = compress(places)
         fs.writeFileSync(PLACEDATA, JSON.stringify(places));
         console.info(`Parsed ${number} rows`, `wrote ${Object.keys(places).length} places`);
     });
