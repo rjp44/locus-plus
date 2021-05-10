@@ -67,6 +67,24 @@ const locations = [
     ],
     'NZ 53841 15044'
   ],
+  [
+    54.4653840350444, -3.1939199054890866,
+    ['Foxtrot Romeo Eight Four Plus Five Charlie Four, Seathwaite, England',
+      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Seatoller, England',
+      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Wasdale Head, England',
+      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Mountain View, England',
+      'Foxtrot Romeo Eight Four Plus Five Charlie Four, Cockley Beck, England'
+    ],
+    'NY 22711 08435',
+  ],
+  [
+    // TODO: be better than this
+    57.5671020359238, -4.932249419163916,
+    [
+      'Nine Charlie Nine Quebec Hotel Three Eight Nine Plus Romeo Four Romeo'
+    ],
+    'NH 24716 56792',
+  ],
   [ // Salt Lake UT Airport: Checks we silently ignore an OSGR OOB error
     40.798513673669625, -111.97667318876773,
     [
