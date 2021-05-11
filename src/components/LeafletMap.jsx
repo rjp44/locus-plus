@@ -10,9 +10,9 @@ export default React.memo(function LeafletMap(props) {
   useEffect(() => {
     if (ref.current?.offsetTop) {
       // This is totally hooky, but react-leaflet wants a fixed size parent div always before 
-      //  it is added to the DOM is added so our flex layout doesn't work. 
-      // There * must * be a better way.
-      setHeight(Math.max(100, window.outerHeight - ref.current.offsetTop - 125));
+      //  it is added to the DOM so our flex layout doesn't work.
+      // There *must* be a better way.
+      setHeight(Math.max(100, window.innerHeight - ref.current.offsetTop - 30));
     }
   }, []);
 
