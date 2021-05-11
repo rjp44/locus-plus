@@ -129,7 +129,7 @@ test('renders when location resolves', async () => {
   for (let location of locations) {
     let unmount;
     let [latitude, longitude, results, osgr] = location;
-    global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => cb({ coords: { latitude, longitude } }));
+    global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => cb({ coords: { latitude, longitude, accuracy: 40 } }));
     await act(async () => {
       ({ unmount } = render(< App />));
       fireEvent.click(screen.getByText('Get Location'));
