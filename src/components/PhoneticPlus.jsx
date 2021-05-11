@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
+import { MapContainer, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,22 +20,26 @@ const useStyles = makeStyles((theme) => ({
   },
   wrapper: {
     flexGrow: 1,
+    height: 30,
     margin: theme.spacing(1),
     position: 'relative',
   },
   buttonProgress: {
     position: 'absolute',
-    top: '50%',
+    top: 0,
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
   },
   buttonCenter: {
     position: 'absolute',
-    top: '25%',
+    top: 0,
     left: '25%',
     width: '50%'
   },
+  map: {
+    height: 250
+  }
 }));
 
 
@@ -51,8 +56,11 @@ export default function PhoneticPlus(props) {
   const getLocation = () => {
     setLocation({ ...location, fetching: true });
     let lcn = new Location();
-    lcn.queryDevice().then(() => {
+    lcn.queryDevice().then(({ latitude, longitude }) => {
       setLocation({
+        latitude,
+        longitude,
+        isLoaded: true,
         phoneticCode: lcn.phoneticCode,
         plusCode: lcn.plusCode,
         phoneticCodes: lcn.phoneticCodes(5),
@@ -76,28 +84,43 @@ export default function PhoneticPlus(props) {
         <Grid item xs={12} className={classes.row}>
           {location?.phoneticCodes?.length && <Button variant="contained" color="primary" onClick={() => setIndex((index + 1) % location.phoneticCodes.length)}>Try Another Spelling</Button>}
         </Grid>
+        <Grid item xs={12} className={classes.row}>
+          {location.osGridRef && <p>OS Grid Ref: <b>{location.osGridRef}</b></p>}
+        </Grid>
+
+        <LocationButton
+          getLocation={getLocation}
+          haveLocation={location?.phoneticCode}
+          fetching={location.fetching}
+          className={classes.row}
+        />
+
+        <Grid item xs={12} className={classes.row}>
+          {location.isLoaded && <Map {...location} />}
+        </Grid>
         {location.accuracy &&
           <Grid item xs={12} className={classes.row}>
             <Typography variant="body2">Your device reports this is accurate to <b>{location.accuracy}m</b></Typography>
           </Grid>}
-        {location.plusCode &&
-          <Grid item xs={12} className={classes.row}>
-            <p>Full Code <b>{location.plusCode}</b></p>
-          </Grid>
-        }
-        {location.osGridRef && <Grid item xs={12} className={classes.row}>OS Grid Ref: <b>{location.osGridRef}</b></Grid>}
-        <Grid item xs={12} className={classes.root}>
-          <LocationButton
-            getLocation={getLocation}
-            haveLocation={location?.phoneticCode}
-            fetching={location.fetching}
-            className={classes.row}
-          />
-        </Grid>
       </Grid>
     </div>
   );
 
+  function Map(props) {
+    return (
+      <MapContainer center={[props.latitude, props.longitude]} zoom={15 - props.accuracy / 750} scrollWheelZoom={true} className={classes.map}>
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={[props.latitude, props.longitude]}>
+          <Popup>{props.plusCode}, accurate to {props.accuracy}m </Popup>
+        </Marker>
+        <Circle center={[props.latitude, props.longitude]} radius={props.accuracy} />
+      </MapContainer>
+    );
+    
+  }
 
   function LocationButton(props) {
     return (
