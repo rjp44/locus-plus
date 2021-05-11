@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
-import { MapContainer, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
+import LeafletMap from './LeafletMap';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
   wrapper: {
     flexGrow: 1,
-    height: 30,
+    height: 18,
     margin: theme.spacing(1),
     position: 'relative',
   },
@@ -34,11 +34,15 @@ const useStyles = makeStyles((theme) => ({
   buttonCenter: {
     position: 'absolute',
     top: 0,
+    marginTop: -12,
     left: '25%',
     width: '50%'
   },
   map: {
     height: 200
+  },
+  phoneticOutput: {
+    height: '4rem'
   }
 }));
 
@@ -76,10 +80,12 @@ export default function PhoneticPlus(props) {
   return (
     <div className={classes.root}>
       <Grid container>
-        <Grid item xs={12} className={classes.row}>
-          <Paper margin={5}>
-            <Typography variant="h6" data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</Typography>
-          </Paper>
+        <Grid item xs={12} className={classes.row} data-testid="phonetic">
+          {(location.phoneticCode || location.err) &&
+            <Paper margin={5} className={classes.phoneticOutput}>
+              <Typography variant="h6">{location?.phoneticCodes?.[index] || location.err}</Typography>
+            </Paper>
+          }
         </Grid>
         <Grid item xs={12} className={classes.row}>
           {location?.phoneticCodes?.length && <Button variant="contained" color="primary" onClick={() => setIndex((index + 1) % location.phoneticCodes.length)}>Try Another Spelling</Button>}
@@ -96,7 +102,7 @@ export default function PhoneticPlus(props) {
         />
 
         <Grid item xs={12} className={classes.row}>
-          {location.isLoaded && <Map {...location} />}
+          {location.isLoaded && <LeafletMap {...location} height="200" />}
         </Grid>
         {location.accuracy &&
           <Grid item xs={12} className={classes.row}>
@@ -106,21 +112,7 @@ export default function PhoneticPlus(props) {
     </div>
   );
 
-  function Map(props) {
-    return (
-      <MapContainer center={[props.latitude, props.longitude]} zoom={15 - props.accuracy / 750} scrollWheelZoom={true} className={classes.map}>
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={[props.latitude, props.longitude]}>
-          <Popup>{props.plusCode}, accurate to {props.accuracy}m </Popup>
-        </Marker>
-        <Circle center={[props.latitude, props.longitude]} radius={props.accuracy} />
-      </MapContainer>
-    );
-    
-  }
+
 
   function LocationButton(props) {
     return (
