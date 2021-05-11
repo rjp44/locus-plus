@@ -70,6 +70,17 @@ const locations = [
     'NZ 53841 15044'
   ],
   [
+    54.40549317980326, -3.0179045138661884,
+    [
+      'Charlie Xray Four Juliet Plus Five Romeo Xray, Knipe Fold, England',
+      'Charlie Xray Four Juliet Plus Five Romeo Xray, Ambleside, England',
+      'Charlie Xray Four Juliet Plus Five Romeo Xray, Ulverston, England',
+      'Charlie Xray Four Juliet Plus Five Romeo Xray, Skelwith Bridge, England',
+      'Charlie Xray Four Juliet Plus Five Romeo Xray, Keswick, England'
+    ],
+    'NY 34023 01592',
+  ],
+  [
     54.4653840350444, -3.1939199054890866,
     [
       'Foxtrot Romeo Eight Four Plus Five Charlie Four, Seathwaite, England',
@@ -81,7 +92,6 @@ const locations = [
     'NY 22711 08435',
   ],
   [
-    // TODO: be better than this
     57.5671020359238, -4.932249419163916,
     [
       'Hotel Three Eight Nine Plus Romeo Four Romeo, Achanalt, Scotland',
@@ -119,7 +129,7 @@ test('renders when location resolves', async () => {
   for (let location of locations) {
     let unmount;
     let [latitude, longitude, results, osgr] = location;
-    global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => cb({ coords: { latitude, longitude } }));
+    global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => cb({ coords: { latitude, longitude, accuracy: 40 } }));
     await act(async () => {
       ({ unmount } = render(< App />));
       fireEvent.click(screen.getByText('Get Location'));
