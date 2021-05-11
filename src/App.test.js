@@ -6,6 +6,8 @@ import {
 } from '@testing-library/react';
 import App from './App';
 
+// We should probably the big data driven test up as it is timing out in CI sometimes, but for now...
+jest.setTimeout(30000)
 
 // Need this to mock the returned location and extend test coverage to location lib
 Object.defineProperty(global.navigator, 'geolocation', {
@@ -126,6 +128,7 @@ test('renders initial empty location', () => {
 
 
 test('renders when location resolves', async () => {
+
   for (let location of locations) {
     let unmount;
     let [latitude, longitude, results, osgr] = location;
