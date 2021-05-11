@@ -93,21 +93,16 @@ export default function PhoneticPlus(props) {
         <Grid item xs={12} className={classes.row}>
           {location.osGridRef && <p>OS Grid Ref: <b>{location.osGridRef}</b></p>}
         </Grid>
-
         <LocationButton
           getLocation={getLocation}
           haveLocation={location?.phoneticCode}
           fetching={location.fetching}
           className={classes.row}
         />
-
         <Grid item xs={12} className={classes.row}>
-          {location.isLoaded && <LeafletMap {...location} height="200" />}
+          {location.isLoaded && <LeafletMap {...location}/>}
         </Grid>
-        {location.accuracy &&
-          <Grid item xs={12} className={classes.row}>
-            <Typography variant="body2">Your device reports this is accurate to <b>{location.accuracy}m</b></Typography>
-          </Grid>}
+
       </Grid>
     </div>
   );
