@@ -16,6 +16,21 @@ export default React.memo(function LeafletMap(props) {
     }
   }, []);
 
+  function Placeholder() {
+    return (<div>
+      <Typography
+        variant="body2">
+        Map cannot display offline
+          </Typography>
+      {props.accuracy &&
+        <Typography
+          variant="body2">
+          Your device reports location is accurate to <b>{props.accuracy}m</b>
+        </Typography>
+      }
+    </div >
+    );
+  }
 
   return (
     <div ref={ref} style={{ height: height + 'px' }}>
@@ -25,7 +40,8 @@ export default React.memo(function LeafletMap(props) {
         scrollWheelZoom={true}
         style={{
           height: height + 'px'
-        }}>
+        }}
+        placeholder={<Placeholder />}>
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -45,7 +61,7 @@ export default React.memo(function LeafletMap(props) {
                 zIndex: 1000
               }
             }>
-            Your device reports this is accurate to <b>{props.accuracy}m</b>
+            Your device reports location is accurate to <b>{props.accuracy}m</b>
           </Typography>}
       </MapContainer>}
     </div>
