@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     width: '50%'
   },
   map: {
-    height: 250
+    height: 200
   }
 }));
 
@@ -78,7 +78,7 @@ export default function PhoneticPlus(props) {
       <Grid container>
         <Grid item xs={12} className={classes.row}>
           <Paper margin={5}>
-            <Typography variant="h5" data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</Typography>
+            <Typography variant="h6" data-testid="phonetic">{location?.phoneticCodes?.[index] || location.err}</Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} className={classes.row}>
