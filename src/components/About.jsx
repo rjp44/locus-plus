@@ -15,6 +15,7 @@ import Link from '@material-ui/core/Link';
 const useStyles = makeStyles((theme) => ({
   paper: {
     margin: theme.spacing(1),
+    padding: theme.spacing(1),
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -52,7 +53,6 @@ export default function About(props) {
       </AppBar>
       <div className={classes.toolbar} />
       <Paper className={classes.paper}>
-        <Typography variant="subtitle1">Code as comment</Typography>
         <Typography variant="body1">
           Locus Plus is a Progressive Web Application which gives the user the NATO alphabet pronunciation of the Open Location Code for their current device location.
         </Typography>
