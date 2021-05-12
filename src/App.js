@@ -1,10 +1,16 @@
+import {
+  HashRouter as Router,
+  Route,
+} from "react-router-dom";
+
 import PhoneticPlus from './components/PhoneticPlus';
+import About from './components/About';
 import './App.css';
 
-import MenuIcon from '@material-ui/icons/Menu';
+import MainMenu from './components/MainMenu';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,18 +40,21 @@ function App() {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Your Location
+      <Router>
+        <>
+          <AppBar position="fixed">
+            <Toolbar>
+              <MainMenu />
+              <Typography variant="h6" className={classes.title}>
+                Your Location
           </Typography>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.toolbar} />
-      <PhoneticPlus />
+            </Toolbar>
+          </AppBar>
+          <div className={classes.toolbar} />
+          <Route exact path="/" children={() => <PhoneticPlus />} />
+          <Route path="/about" component={About} />
+        </>
+      </Router>
     </div>
   );
 }
