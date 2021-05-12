@@ -57,8 +57,7 @@ parseFile(DATAFILE, opts)
       let codes = [
         plusCode.slice(0, 4),
         plusCode.slice(0, 6),
-        plusCode.slice(0, 8),
-        plusCode.slice(0, 11)
+        plusCode.slice(0, 8)
       ];
       let place = {
         id: id.replace(/.*osgb40*/, ''),
@@ -88,8 +87,6 @@ parseFile(DATAFILE, opts)
       names[name] = id;
       codes.forEach(code => {
         let list = (hierarchy > threshold) ? places : reservePlaces;
-        // If there is no place associated with this tile, or there is but this one is a better choice
-        //  because it is more noaable or simpler name to say...
         list[place.id] = place;
         list[code] = list[code] || [];
         list[code].push(place.id);
