@@ -52,16 +52,16 @@ const useStyles = makeStyles((theme) => ({
   },
   locationOverlay: {
     position: 'absolute',
-    top: 60,
-    width: '50%',
-    left: '25%',
+    top: 80,
+    width: '80%',
+    left: '10%',
     zIndex: 1000
   },
   gridRef: {
     position: 'absolute',
-    top: 30,
-    width: '50%',
-    right: '25%',
+    top: 25,
+    width: '60%',
+    right: '20%',
     background: 'rgba(255, 255, 255, 0.6)',
     zIndex: 1000
   },
@@ -127,7 +127,7 @@ export default function PhoneticPlus(props) {
       </Grid>}
       <Grid item xs={12} className={classes.hog}>
         {location.isLoaded && <LeafletMap {...location} />}
-        {location.osGridRef && <div className={classes.gridRef}>OS Grid Ref: <b>{location.osGridRef}</b></div>}
+        {location.osGridRef && <div className={classes.gridRef}><Typography variant="h6">OS Grid Ref: <b>{location.osGridRef}</b></Typography></div>}
         {location.isLoaded && <div className={classes.locationOverlay}>
           <LocationButton
             getLocation={getLocation}
