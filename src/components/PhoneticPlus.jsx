@@ -53,7 +53,8 @@ const useStyles = makeStyles((theme) => ({
   locationOverlay: {
     position: 'absolute',
     top: 60,
-    width: '100%',
+    width: '50%',
+    left: '25%',
     zIndex: 1000
   },
   gridRef: {
