@@ -127,11 +127,13 @@ test('renders initial empty location', () => {
 });
 
 
-test('renders when location resolves', async () => {
 
-  for (let location of locations) {
-    let unmount;
-    let [latitude, longitude, results, osgr] = location;
+
+for (let location of locations) {
+  let unmount;
+  let [latitude, longitude, results, osgr] = location;
+  test(`renders ${[latitude, longitude]} correctly`, async () => {
+
     global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => cb({ coords: { latitude, longitude, accuracy: 40 } }));
     await act(async () => {
       ({ unmount } = render(< App />));
@@ -146,11 +148,43 @@ test('renders when location resolves', async () => {
       });
     };
     if (osgr)
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(screen.getByText(osgr)).toBeInTheDocument();
     unmount();
+  });
+}
+
+
+
+
+  let accuracies = [
+    [20, ['20', 'm, a good level of accuracy']],
+    [100, ['100', 'a workable level of accuracy']],
+    [101, ['101', 'please click Update to try again']],
+    [1003, ['1003', 'please click Update to try again']],
+  ]
+    
+  let location = locations[0];
+  for (let [accuracy, messages] of accuracies) {
+    test(`Accuracy warnings ${accuracy}m`, async () => {
+      let unmount;
+      let [latitude, longitude, , osgr] = location;
+      global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => cb({ coords: { latitude, longitude, accuracy } }));
+      await act(async () => {
+        ({ unmount } = render(< App />));
+        fireEvent.click(screen.getByText('Get Location'));
+      });
+      for (let message of messages)
+        await expect(screen.getByRole('alert').textContent).toContain(message);
+  
+  
+      if (osgr)
+        // eslint-disable-next-line jest/no-conditional-expect
+        expect(screen.getByText(osgr)).toBeInTheDocument();
+      unmount();
+    });
   }
 
-});
 
 
 test('renders error when location rejects', async () => {

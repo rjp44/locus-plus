@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import LeafletMap from './LeafletMap';
@@ -74,6 +76,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const accuracyLevels = {
+  25: { level: 'success', summary: 'a good level of accuracy' },
+  100: { level: 'info', summary: 'a workable level of accuracy' },
+  500: { level: 'warning', summary: 'please click Update to try again' },
+  9999999: { level: 'error', summary: 'please click Update to try again' },
+};
+
 
 
 export default function PhoneticPlus(props) {
@@ -84,21 +93,28 @@ export default function PhoneticPlus(props) {
     }
   );
   const [index, setIndex] = useState(0);
+  const [confirmation, setConfirmation] = useState(0);
 
   const getLocation = () => {
     setLocation({ ...location, fetching: true });
+    setConfirmation(0)
     let lcn = new Location();
-    lcn.queryDevice().then(({ latitude, longitude }) => {
+    lcn.queryDevice().then(({ latitude, longitude, accuracy }) => {
       setLocation({
         latitude,
         longitude,
+        accuracy,
         isLoaded: true,
         phoneticCode: lcn.phoneticCode,
         plusCode: lcn.plusCode,
         phoneticCodes: lcn.phoneticCodes(5),
-        osGridRef: lcn.osGridRef,
-        accuracy: lcn.accuracy
+        osGridRef: lcn.osGridRef
       });
+      let commentary = accuracy && Object.entries(accuracyLevels)
+        .find(([key, value]) => (accuracy <= key));
+      let [, { level, summary }] = commentary || [null, {}];
+      setConfirmation({ level, summary });
+
     })
       .catch(err => setLocation({
         err: `Something went wrong, please allow location access: ${err.message}`
@@ -136,13 +152,16 @@ export default function PhoneticPlus(props) {
             className={classes.row}
           />
         </div>}
-        {location.accuracy && <div className={classes.accuracyOverlay}>
-          <Typography variant="body1">Your device reports location is accurate to <b>{location.accuracy}m</b>
-          </Typography>
-        </div>}
+        {confirmation?.level && <MySnackbar severity={confirmation.level} setConfirmation={setConfirmation} open={true}>
+          Location accuracy is <b>{location.accuracy}</b>m, {confirmation.summary}
+        </MySnackbar>
+
+        }
+
       </Grid>
     </Grid>
   );
+
 
 
 
@@ -163,8 +182,33 @@ export default function PhoneticPlus(props) {
     );
   }
 
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
+
+  function MySnackbar(props) {
+    const classes = useStyles();
+    const [open, setOpen] = React.useState(props.open);
+
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpen(false);
+      props.setConfirmation(false);
+    };
+
+
+    return (
+      <div className={classes.root}>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity={props.severity}>
+            {props.children}
+          </Alert>
+        </Snackbar>
+      </div>
+    );
+
+  }
 }
-
-
-
