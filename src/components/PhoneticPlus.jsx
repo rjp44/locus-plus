@@ -41,8 +41,8 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: 0,
     marginTop: -12,
-    left: '25%',
-    width: '50%'
+    width: '100%',
+    left: 0
   },
   map: {
     height: 200
@@ -53,15 +53,15 @@ const useStyles = makeStyles((theme) => ({
   locationOverlay: {
     position: 'absolute',
     top: 80,
-    width: '80%',
-    left: '10%',
+    width: '70%',
+    left: '15%',
     zIndex: 1000
   },
   gridRef: {
     position: 'absolute',
     top: 25,
-    width: '60%',
-    right: '20%',
+    width: '70%',
+    right: '15%',
     background: 'rgba(255, 255, 255, 0.6)',
     zIndex: 1000
   },
