@@ -10,11 +10,16 @@ import LeafletMap from './LeafletMap';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
-    alignItems: 'stretch'
+    height: '100%',
+    flexDirection: 'column'
   },
   row: {
-    flexGrow: 1,
+    flex: '0 1 auto',
+    padding: theme.spacing(1),
+    textAlign: 'center',
+  },
+  hog: {
+    flex: '1 1 auto',
     padding: theme.spacing(1),
     textAlign: 'center',
   },
@@ -78,8 +83,7 @@ export default function PhoneticPlus(props) {
   };
 
   return (
-    <div className={classes.root}>
-      <Grid container>
+      <Grid container className={classes.root}>
         <Grid item xs={12} className={classes.row} data-testid="phonetic">
           {(location.phoneticCode || location.err) &&
             <Paper margin={5} className={classes.phoneticOutput}>
@@ -92,19 +96,20 @@ export default function PhoneticPlus(props) {
         </Grid>
         <Grid item xs={12} className={classes.row}>
           {location.osGridRef && <p>OS Grid Ref: <b>{location.osGridRef}</b></p>}
-        </Grid>
+      </Grid>
+      <Grid item xs={12} className={classes.row}>
         <LocationButton
           getLocation={getLocation}
           haveLocation={location?.phoneticCode}
           fetching={location.fetching}
           className={classes.row}
         />
-        <Grid item xs={12} className={classes.row}>
+      </Grid>
+        <Grid item xs={12} className={classes.hog}>
           {location.isLoaded && <LeafletMap {...location}/>}
         </Grid>
 
       </Grid>
-    </div>
   );
 
 

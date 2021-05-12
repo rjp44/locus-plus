@@ -1,16 +1,16 @@
 import PhoneticPlus from './components/PhoneticPlus';
 import './App.css';
 
-import GitHubIcon from '@material-ui/icons/GitHub'
+import MenuIcon from '@material-ui/icons/Menu';
+
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Drawer, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'stretch'
   },
   row: {
     position: 'center'
@@ -26,25 +26,27 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  toolbar: theme.mixins.toolbar
 }));
 
 
 function App() {
   const classes = useStyles();
   return (
-    <div>
-      <AppBar position="static">
+    <div className={classes.root}>
+      <AppBar position="fixed">
         <Toolbar>
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <MenuIcon />
+          </IconButton>
           <Typography variant="h6" className={classes.title}>
             Your Location
           </Typography>
         </Toolbar>
       </AppBar>
+      <div className={classes.toolbar} />
       <PhoneticPlus />
-      <Drawer anchor="bottom" variant="permanent">
-        <div><GitHubIcon /> <a href="https://github.com/rjp44/locus-plus"> rjp44/locus-plus </a></div>
-      </Drawer>
-</div>
+    </div>
   );
 }
 
