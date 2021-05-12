@@ -74,7 +74,7 @@ export default function About(props) {
       when being used in online mode. I guess it is feasible that your location could be infered by someone who has access to their logs, so don't do this if you have any reason to be paranoid.
       </Typography>
         <Typography variant="body1">
-          If you wish to verify the above privacy claims, the source code can be inspected. The application code served at <Link hreaf="https://locus.plus/" target="_blank" rel="noopener">locus.plus</Link> is the last commit on the head of the main branch at <Link href="https://github.com/rjp44/locus-plus#main">GitHub</Link> (subject to CI test passing, check the status).
+          The privacy claims may be verified by inspecting the source code. The application code served at <Link hreaf="https://locus.plus/" target="_blank" rel="noopener">locus.plus</Link> is the last commit on the head of the <b>main</b> branch at <Link href="https://github.com/rjp44/locus-plus#main">GitHub</Link> (subject to CI test passing, check the status).
         </Typography>
       </Paper>
       <Paper className={classes.paper}>
