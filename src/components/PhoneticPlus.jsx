@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   hog: {
+    position: 'relative',
     flex: '1 1 auto',
     padding: theme.spacing(1),
     textAlign: 'center',
@@ -47,7 +48,28 @@ const useStyles = makeStyles((theme) => ({
     height: 200
   },
   phoneticOutput: {
-    height: '4rem'
+    minHeight: '4rem'
+  },
+  locationOverlay: {
+    position: 'absolute',
+    top: 60,
+    width: '100%',
+    zIndex: 1000
+  },
+  gridRef: {
+    position: 'absolute',
+    top: 30,
+    width: '50%',
+    right: '25%',
+    background: 'rgba(255, 255, 255, 0.6)',
+    zIndex: 1000
+  },
+  accuracyOverlay: {
+    position: 'absolute',
+    left: 10,
+    bottom: 10,
+    zIndex: 1000,
+    background: 'rgba(255, 255, 255, 0.6)'
   }
 }));
 
@@ -83,33 +105,42 @@ export default function PhoneticPlus(props) {
   };
 
   return (
-      <Grid container className={classes.root}>
-        <Grid item xs={12} className={classes.row} data-testid="phonetic">
-          {(location.phoneticCode || location.err) &&
-            <Paper margin={5} className={classes.phoneticOutput}>
-              <Typography variant="h6">{location?.phoneticCodes?.[index] || location.err}</Typography>
-            </Paper>
-          }
-        </Grid>
-        <Grid item xs={12} className={classes.row}>
-          {location?.phoneticCodes?.length && <Button variant="contained" color="primary" onClick={() => setIndex((index + 1) % location.phoneticCodes.length)}>Try Another Spelling</Button>}
-        </Grid>
-        <Grid item xs={12} className={classes.row}>
-          {location.osGridRef && <p>OS Grid Ref: <b>{location.osGridRef}</b></p>}
+    <Grid container className={classes.root}>
+      <Grid item xs={12} className={classes.row} data-testid="phonetic">
+        {(location.phoneticCode || location.err) &&
+          <Paper margin={5} className={classes.phoneticOutput}>
+            <Typography variant="h6">{location?.phoneticCodes?.[index] || location.err}</Typography>
+          </Paper>
+        }
       </Grid>
       <Grid item xs={12} className={classes.row}>
+        {location?.phoneticCodes?.length && <Button variant="contained" color="primary" onClick={() => setIndex((index + 1) % location.phoneticCodes.length)}>Try Another Spelling</Button>}
+      </Grid>
+      {!location.isLoaded && <Grid item xs={12} className={classes.row}>
         <LocationButton
           getLocation={getLocation}
           haveLocation={location?.phoneticCode}
           fetching={location.fetching}
           className={classes.row}
         />
+      </Grid>}
+      <Grid item xs={12} className={classes.hog}>
+        {location.isLoaded && <LeafletMap {...location} />}
+        {location.osGridRef && <div className={classes.gridRef}>OS Grid Ref: <b>{location.osGridRef}</b></div>}
+        {location.isLoaded && <div className={classes.locationOverlay}>
+          <LocationButton
+            getLocation={getLocation}
+            haveLocation={location?.phoneticCode}
+            fetching={location.fetching}
+            className={classes.row}
+          />
+        </div>}
+        {location.accuracy && <div className={classes.accuracyOverlay}>
+          <Typography variant="body1">Your device reports location is accurate to <b>{location.accuracy}m</b>
+          </Typography>
+        </div>}
       </Grid>
-        <Grid item xs={12} className={classes.hog}>
-          {location.isLoaded && <LeafletMap {...location}/>}
-        </Grid>
-
-      </Grid>
+    </Grid>
   );
 
 

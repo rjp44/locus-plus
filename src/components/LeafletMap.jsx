@@ -39,19 +39,6 @@ export default React.memo(function LeafletMap(props) {
             <Popup>{props.plusCode}, accurate to {props.accuracy}m </Popup>
           </Marker>
           <Circle center={[props.latitude, props.longitude]} radius={props.accuracy} />
-          {props.accuracy &&
-            <Typography
-              variant="body1"
-              style={
-                {
-                  position: 'absolute',
-                  left: 10,
-                  bottom: 10,
-                  zIndex: 1000
-                }
-              }>
-              Your device reports location is accurate to <b>{props.accuracy}m</b>
-            </Typography>}
           </MapContainer>
   );
 
