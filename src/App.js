@@ -1,13 +1,13 @@
 import {
   HashRouter as Router,
   Route,
+  useLocation
 } from "react-router-dom";
 
-import PhoneticPlus from './components/PhoneticPlus';
-import About from './components/About';
+
 import './App.css';
 
-import MainMenu from './components/MainMenu';
+import MainMenu, { paths as MenuPaths } from './components/MainMenu';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <Router>
@@ -45,18 +46,30 @@ function App() {
           <AppBar position="fixed">
             <Toolbar>
               <MainMenu />
-              <Typography variant="h6" className={classes.title}>
-                Your Location
-          </Typography>
+              <LocationHeader />
             </Toolbar>
           </AppBar>
           <div className={classes.toolbar} />
-          <Route exact path="/" children={() => <PhoneticPlus />} />
-          <Route path="/about" component={About} />
+          {Object.entries(MenuPaths).map(([key, value]) =>
+            <Route exact={value.exact}
+              path={key}
+              key={key}
+              component={value.component}
+              children={value.children}
+            />
+          )}
         </>
       </Router>
     </div>
   );
+
+  function LocationHeader() {
+    const location = useLocation();
+    return (<Typography variant="h6" className={classes.title}>
+      {MenuPaths[location.pathname]?.title}
+    </Typography>);
+
+  }
 }
 
 export default App;
