@@ -10,8 +10,8 @@ import Console from './Console';
 
 export let paths = {
   '/': { title: 'Location', exact: true, children: (props) => <PhoneticPlus {...props} /> },
-  '/about': { title: 'About', component: About },
   '/console': { title: 'Operator Console', component: Console },
+  '/about': { title: 'About', component: About }
 }
 
 
