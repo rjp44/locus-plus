@@ -24,7 +24,7 @@ export default class Location {
       if (plusCode) {
         let [recovery] = (parsed.places && parsed.places.length === 1 && parsed.places) || [];
         plusCode = (recovery && OpenLocationCode.recoverNearest(parsed.plusCode, recovery.lat, recovery.long)) || plusCode;
-        if (plusCode.length >= 11) {
+        if (plusCode.length >= 11 && plusCode.indexOf('+') === 8) {
           let area = OpenLocationCode.decode(plusCode);
           ({ latitudeCenter: latitude, longitudeCenter: longitude } = area);
         }
@@ -232,7 +232,7 @@ export default class Location {
   }
 
   static parseLocationString(input) {
-
+    // Is it a pluscode?
     let [, plusCode, separator, placeName] = input.match(
       /^([23456789CFGHJMPQRVWX]{2,8}\+[23456789CFGHJMPQRVWX]{2,3})(, )?(.*)?$/i
     ) || [];
@@ -246,6 +246,8 @@ export default class Location {
           .filter(([key, value]) => key.startsWith(placeName.replace(/, .*/, '').toLowerCase()))
           .map(([key, value]) => places[value])
       });
+    
+    // Is it an OS Grid Reference
     let osgr = input.match(/^([H-T][A-Y])? ?([0-9]{3,6}) ?([0-9]{3,6})$/)
     if (osgr) {
       try {
@@ -256,6 +258,7 @@ export default class Location {
         //  Nowt
       }
     }
+    // TODO Is it a decimal Lat/Lon
     return {};
 
   }
@@ -266,7 +269,7 @@ export default class Location {
     placeName = placeName && placeName.toLowerCase();
 
     if (plusCode) {
-      if (!separator && plusCode.match(/\+[23456789CFGHJMPQRVWX]{3,3}/)) {
+      if (!separator && plusCode.match(/^[23456789CFGHJMPQRVWX]{2,6}\+[23456789CFGHJMPQRVWX]{3,3}$/)) {
         suggestions.push(`${plusCode}, `);
       }
       else if (separator && placeName && placeName.length) {
