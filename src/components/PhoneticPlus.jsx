@@ -94,12 +94,14 @@ export default function PhoneticPlus(props) {
   );
   const [index, setIndex] = useState(0);
   const [confirmation, setConfirmation] = useState(0);
+  const [getCount, setGetCount] = useState(0);
 
   const getLocation = () => {
     setLocation({ ...location, fetching: true });
     setConfirmation(0)
     let lcn = new Location();
     lcn.queryDevice().then(({ latitude, longitude, accuracy }) => {
+      setGetCount(getCount + 1);
       setLocation({
         latitude,
         longitude,
@@ -142,7 +144,7 @@ export default function PhoneticPlus(props) {
         />
       </Grid>}
       <Grid item xs={12} className={classes.hog}>
-        {location.isLoaded && <LeafletMap {...location} />}
+        {location.isLoaded && <LeafletMap {...location} update={getCount} />}
         {location.osGridRef && <div className={classes.gridRef}><Typography variant="h6">OS Grid Ref: <b>{location.osGridRef}</b></Typography></div>}
         {location.isLoaded && <div className={classes.locationOverlay}>
           <LocationButton
