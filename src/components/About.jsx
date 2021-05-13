@@ -55,12 +55,13 @@ export default function About(props) {
       <Paper className={classes.paper}>
         <Typography variant="body1">
           Locus Plus is a Progressive Web Application which gives the user the NATO alphabet pronunciation of the Open Location Code for their current device location.
+          It also now includes an operator console which allows read back OLC codes and OS grid references to be entered and inspected via Open Streetmap Tiles.
         </Typography>
       </Paper>
       <Paper className={classes.paper}>
         <Typography variant="h6">Source Code</Typography>
         <Typography variant="body1">
-          This demo is hosted for convenience at <b>locus.plus</b> but the source code is available to anyone to use and modify under the very permissive BSD open source licence. You can download it here:
+          This demo is hosted for convenience at <b>locus.plus</b>. The source code is available to anyone to use and modify under the very permissive BSD open source licence. You can download it here:
         </Typography>
         <Typography><GitHubIcon /><Link href="https://github.com/rjp44/locus-plus/" target="_blank" rel="noopener">rjp44/locus-plus</Link></Typography>
       </Paper>
@@ -74,7 +75,7 @@ export default function About(props) {
       when being used in online mode. I guess it is feasible that your location could be infered by someone who has access to their logs, so don't do this if you have any reason to be paranoid.
       </Typography>
         <Typography variant="body1">
-          The privacy claims may be verified by inspecting the source code. The application code served at <Link hreaf="https://locus.plus/" target="_blank" rel="noopener">locus.plus</Link> is the last commit on the head of the <b>main</b> branch at <Link href="https://github.com/rjp44/locus-plus#main">GitHub</Link> (subject to CI test passing, check the status).
+          The source code may be inspected. The application code served at <Link hreaf="https://locus.plus/" target="_blank" rel="noopener">locus.plus</Link> is the last commit on the head of the <b>main</b> branch at <Link href="https://github.com/rjp44/locus-plus#main">GitHub</Link> (subject to CI test passing, check the status).
         </Typography>
       </Paper>
       <Paper className={classes.paper}>
