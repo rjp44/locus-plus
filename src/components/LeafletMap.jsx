@@ -25,7 +25,10 @@ export default React.memo(function LeafletMap(props) {
   }
 
   useEffect(() => {
-    if (map) {
+    // MapContainer doesn't re-render to reset any user induced pan/zoom when
+    //  we re-render it with the same props, so updates may or may not re-centre the map.
+    // To fix this, we re-centre the map whenever a terminal state update completes even if same props.
+    if (map && !props.fetching) {
       map.setView([props.latitude, props.longitude], zoom);
     }
   });
