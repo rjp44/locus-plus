@@ -77,9 +77,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const accuracyLevels = {
-  25: { level: 'success', summary: 'a good level of accuracy' },
-  100: { level: 'info', summary: 'a workable level of accuracy' },
-  500: { level: 'warning', summary: 'please click Update to try again' },
+  25: { level: 'success', summary: 'great!' },
+  100: { level: 'info', summary: 'good' },
+  500: { level: 'warning', summary: 'may improve if you Update' },
   9999999: { level: 'error', summary: 'please click Update to try again' },
 };
 
@@ -103,7 +103,7 @@ export default function PhoneticPlus(props) {
       setLocation({
         latitude,
         longitude,
-        accuracy,
+        accuracy: Math.ceil(accuracy),
         isLoaded: true,
         phoneticCode: lcn.phoneticCode,
         plusCode: lcn.plusCode,

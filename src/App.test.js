@@ -158,10 +158,10 @@ for (let location of locations) {
 
 
   let accuracies = [
-    [20, ['20', 'm, a good level of accuracy']],
-    [100, ['100', 'a workable level of accuracy']],
-    [101, ['101', 'please click Update to try again']],
-    [1003, ['1003', 'please click Update to try again']],
+    [20, ['20', 'm, great!']],
+    [100, ['100', 'good']],
+    [100.000001, ['101', 'may improve if you Update']],
+    [1003.3492634202342983572, ['1004', 'please click Update to try again']],
   ]
     
   let location = locations[0];
