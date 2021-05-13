@@ -98,7 +98,7 @@ export default function PhoneticPlus(props) {
 
   const getLocation = () => {
     setLocation({ ...location, fetching: true });
-    setConfirmation(0)
+    setConfirmation(0);
     let lcn = new Location();
     lcn.queryDevice().then(({ latitude, longitude, accuracy }) => {
       setGetCount(getCount + 1);
@@ -122,8 +122,7 @@ export default function PhoneticPlus(props) {
         err: `Something went wrong, please allow location access: ${err.message}`
       }));
   };
-
-  return (
+  return (props.match ? 
     <Grid container className={classes.root}>
       <Grid item xs={12} className={classes.row} data-testid="phonetic">
         {(location.phoneticCode || location.err) &&
@@ -161,7 +160,7 @@ export default function PhoneticPlus(props) {
         }
 
       </Grid>
-    </Grid>
+    </Grid> : null
   );
 
 

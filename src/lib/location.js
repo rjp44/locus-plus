@@ -1,15 +1,59 @@
 import OpenLocationCode from "open-location-code/js/src/openlocationcode.js";
-import { LatLon } from 'geodesy/osgridref.js';
+import OsGridRef, { LatLon } from 'geodesy/osgridref.js';
 import phonetic from "alpha-bravo";
 
-const places = require("../places.json");
+let places = require("../places.json");
 
+places.byName = Object.fromEntries(
+  Object.entries(places)
+    .filter(([key, value]) => !Array.isArray(value))
+    .map(([key, value]) => [value.name && value.name.toLowerCase(), key])
+);
 export default class Location {
 
 
-  constructor(latitude, longitude, altitude) {
-    this._position = latitude != null && longitude != null && { latitude, longitude, altitude };
+  constructor(...params) {
+
+    let [latitude, longitude, altitude, accuracy] = (params.length >= 2 && params) || [];
+    if (params[0]?.latitude) {
+      ({ latitude, longitude, altitude, accuracy } = params[0]);
+    }
+    else {
+      let parsed = (typeof params[0] === 'string') && Location.parseLocationString(params[0]);
+      let { plusCode, osgr } = parsed || {};
+      if (plusCode) {
+        let [recovery] = (parsed.places && parsed.places.length === 1 && parsed.places) || [];
+        plusCode = (recovery && OpenLocationCode.recoverNearest(parsed.plusCode, recovery.lat, recovery.long)) || plusCode;
+        if (plusCode.length >= 11) {
+          let area = OpenLocationCode.decode(plusCode);
+          ({ latitudeCenter: latitude, longitudeCenter: longitude } = area);
+        }
+      }
+      if (osgr) {
+
+        let gridref = new OsGridRef(osgr.easting, osgr.northing);
+        ({ latitude, longitude } = gridref.toLatLon());
+      }
+    }
+    this._position = latitude != null && longitude != null && { latitude, longitude, altitude, accuracy };
   }
+
+  get isValid() {
+    return this._position?.latitude != null 
+  }
+
+  get latitude() {
+    return this._position?.latitude;
+  }
+  
+  get longitude() {
+    return this._position?.longitude;
+  }
+
+  get accuracy() {
+    return this._position?.accuracy || 0;
+  }
+
 
 
   get plusCode() {
@@ -26,19 +70,14 @@ export default class Location {
   get shortCode() {
     if (!this._position?.latitude)
       return undefined;
-      if (!this._shortCodes)
-        this._buildShortCodes(this._position);
+    if (!this._shortCodes)
+      this._buildShortCodes(this._position);
     return this._shortCodes[0];
   }
 
   get phoneticCode() {
     return this.shortCode && this._phoneticCodes[0];
   }
-
-  get accuracy() {
-    return this?._position?.accuracy;
-  }
-
 
   /**
    *
@@ -134,7 +173,7 @@ export default class Location {
       res = res || b.hierarchy - a.hierarchy;
       res = res || a.distance - b.distance;
       return res;
-    }))
+    }));
     let distance = references.sort((a, b) => {
       // Primary sort criteria is shortcode length, then distance
       let res = a.shortCode.length - b.shortCode.length;
@@ -147,7 +186,7 @@ export default class Location {
       references.push(distance.shift());
       references.push(size.shift());
     }
-      // Add reference place name
+    // Add reference place name
     references = references
       .filter(r => r != null)
       .map((r) => ({
@@ -190,5 +229,52 @@ export default class Location {
       }
     }
     return this._osGridRef;
+  }
+
+  static parseLocationString(input) {
+
+    let [, plusCode, separator, placeName] = input.match(
+      /^([23456789CFGHJMPQRVWX]{2,8}\+[23456789CFGHJMPQRVWX]{2,3})(, )?(.*)?$/i
+    ) || [];
+
+    if (plusCode)
+      return ({
+        plusCode,
+        separator,
+        placeName,
+        places: placeName && Object.entries(places.byName)
+          .filter(([key, value]) => key.startsWith(placeName.replace(/, .*/, '').toLowerCase()))
+          .map(([key, value]) => places[value])
+      });
+    let osgr = input.match(/^([H-T][A-Y])? ?([0-9]{3,6}) ?([0-9]{3,6})$/)
+    if (osgr) {
+      try {
+        osgr = OsGridRef.parse(input);
+        return { osgr };
+      }
+      catch (e) {
+        //  Nowt
+      }
+    }
+    return {};
+
+  }
+
+  static async autoComplete(input) {
+    let suggestions = [];
+    let { plusCode, separator, placeName } = Location.parseLocationString(input);
+    placeName = placeName && placeName.toLowerCase();
+
+    if (plusCode) {
+      if (!separator && plusCode.match(/\+[23456789CFGHJMPQRVWX]{3,3}/)) {
+        suggestions.push(`${plusCode}, `);
+      }
+      else if (separator && placeName && placeName.length) {
+        suggestions = Object.entries(places.byName)
+          .filter(([key, value]) => key.startsWith(placeName))
+          .map(([key, value]) => `${plusCode}, ${places[value].name}, ${places[value].country}`);
+      }
+    }
+    return (suggestions);
   }
 }
