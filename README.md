@@ -6,19 +6,16 @@ Try it at [locus.plus](https://locus.plus).
 
 Designed to be used offine if required, it uses no external services to produce the code. It would be very simple to develop an inverse application which allows the displayed codes to be typed in and reverse the process to arrive at a lat/lon or OS grid reference, again without using any external services outside of this codebase.
 
-For now it can be used and demonstrated just by typing the spelled out plus code into an application like Google maps which understands them natively.
+It now includes a very simple "operator console" demo within the same app. Select "Operator Console" from the main menu to access this:
 
 ![locus-plus output](images/locus-plus.png)
 ![into Google Maps](images/maps-detail.png)
 ## TODO
 
-This is a hack, there are some things very wrong with it. If it were, or becomes a real project these would be tracked with issues.
+This is a hack, there are some things wrong with it. It is starting to pick up a few Github issues, but as well as those, I know about the following:
 
  * Maybe Gaelic and welsh native names should be filtered out as primary placenames unless browser Locale indicates they would be useful.
  * Add Northern Ireland [Open PLace Name data](https://www.opendatani.gov.uk/).
- * Algorithm for reference point density could be a lot better. It is currently "If there aren't many in a tile, chuck lots more in from a reserve list of fine grained data points, oh look now we have lots of silly reference points".
-
-
 
 ## How
 
