@@ -266,10 +266,10 @@ export default class Location {
     placeName = placeName && placeName.toLowerCase();
 
     if (plusCode) {
-      if (!separator) {
+      if (!separator && plusCode.match(/\+[23456789CFGHJMPQRVWX]{3,3}/)) {
         suggestions.push(`${plusCode}, `);
       }
-      else if (placeName && placeName.length) {
+      else if (separator && placeName && placeName.length) {
         suggestions = Object.entries(places.byName)
           .filter(([key, value]) => key.startsWith(placeName))
           .map(([key, value]) => `${plusCode}, ${places[value].name}, ${places[value].country}`);

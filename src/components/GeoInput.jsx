@@ -28,7 +28,12 @@ export default function GeoInput(props) {
         if (results) {
           newOptions = [...newOptions, ...results];
         }
-        setOptions(newOptions);
+        if (results[0] === `${inputValue}, `) {
+          setValue(results[0]);
+        }
+        else {
+          setOptions(newOptions);
+        }
       }
     });
 
@@ -59,7 +64,11 @@ export default function GeoInput(props) {
         }
       }}
       renderInput={(params) => (
-        <TextField {...params} label="User stated location" variant="outlined" fullWidth />
+        <TextField {...params}
+          label="User stated location"
+          placeholder="Enter a short or long plus code, or OS Grid Reference here"
+          variant="outlined"
+          fullWidth />
       )}
     />
   );
