@@ -58,10 +58,8 @@ export default function GeoInput(props) {
       }}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
-        let location = new Location(newInputValue);
-        if (location && location.isValid) {
-          props.setLocation(location);
-        }
+          let location = new Location(newInputValue);
+            props.setLocation(location);
       }}
       renderInput={(params) => (
         <TextField {...params}

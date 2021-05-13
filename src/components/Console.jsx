@@ -86,8 +86,19 @@ export default function Console(props) {
         <GeoInput setLocation={setLocation}/>
       </Grid>
       <Grid item xs={12} className={classes.hog}>
-        {location.latitude && <LeafletMap latitude={location.latitude} longitude={location.longitude} accuracy={0}/>}
-        {location.osGridRef && <div className={classes.gridRef}><Typography variant="h6">OS Grid Ref: <b>{location.osGridRef}</b></Typography></div>}
+        {location?.latitude ?
+          <LeafletMap latitude={location.latitude} longitude={location.longitude} accuracy={0} />
+          : <div>
+            <Typography variant="h6">Enter a valid location string in the input area above to see a map location</Typography>
+            <Typography variant="body1">This can be a short pluscode from the locator app with completions like:<br />
+              <b>G8+7GV, Hoxton, England</b>,<br />
+              a long pluscode like:<br />
+              <b>85GCQ2XF+C84</b><br />
+              or an OS Grid reference like:<br />
+              <b>NS 01823 35892</b>.
+            </Typography>
+            </div>}
+        {location?.osGridRef && <div className={classes.gridRef}><Typography variant="h6">OS Grid Ref: <b>{location.osGridRef}</b></Typography></div>}
       </Grid>
     </Grid>
   );
