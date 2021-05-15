@@ -19,8 +19,17 @@ export default function GeoInput(props) {
       return undefined;
     }
 
+    const getLongestPrefix = (str) => str.reduce((o, r) => {
+      let conseq = 0;
+      return r.split('')
+        .map((c, index) =>
+          (c === o[index] && conseq++ === index && c) || '');
+    }, str[0].split(''))
+      .join('');
+
     Location.autoComplete(inputValue).then((results) => {
       if (active) {
+        let prefix = results && results.length && getLongestPrefix(results);
         let newOptions = [];
         if (value) {
           newOptions = [value];
@@ -28,8 +37,8 @@ export default function GeoInput(props) {
         if (results) {
           newOptions = [...newOptions, ...results];
         }
-        if (results[0] === `${inputValue}, `) {
-          setValue(results[0]);
+        if (prefix && prefix.length > inputValue.length) {
+          setValue(prefix);
         }
         else {
           setOptions(newOptions);
@@ -58,8 +67,8 @@ export default function GeoInput(props) {
       }}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
-          let location = new Location(newInputValue);
-            props.setLocation(location);
+        let location = new Location(newInputValue);
+        props.setLocation(location);
       }}
       renderInput={(params) => (
         <TextField {...params}
