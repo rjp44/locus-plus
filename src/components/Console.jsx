@@ -21,38 +21,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
   },
-  wrapper: {
-    flexGrow: 1,
-    height: 18,
-    margin: theme.spacing(1),
-    position: 'relative',
-  },
-  buttonProgress: {
-    position: 'absolute',
-    top: 0,
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12,
-  },
-  buttonCenter: {
-    position: 'absolute',
-    top: 0,
-    marginTop: -12,
-    width: '100%',
-    left: 0
-  },
   map: {
     height: 200
-  },
-  phoneticOutput: {
-    minHeight: '4rem'
-  },
-  locationOverlay: {
-    position: 'absolute',
-    top: 80,
-    width: '70%',
-    left: '15%',
-    zIndex: 1000
   },
   gridRef: {
     position: 'absolute',
