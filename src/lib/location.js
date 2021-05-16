@@ -9,9 +9,69 @@ places.byName = Object.fromEntries(
     .filter(([key, value]) => !Array.isArray(value))
     .map(([key, value]) => [value.name && value.name.toLowerCase(), key])
 );
-export default class Location {
 
 
+/**
+ * @typedef {Object} Position
+ * @property {number} latitude  Decimal degrees of latitude
+ * @property {number} longitude Decimal degrees of longitude
+ * @property {number} altitude  Altitude above mean sea level in metres
+ * @property {number} accuracy  The radius of uncertainty for of the location.
+ */
+/**
+ * @typedef {String} plusCodeString
+ * @description A full 10 or 11 digit OLC (plus code) string
+ * @example 85GCQ2XF+C84
+ * @example 85GCQ2XF+C8
+ */
+/**
+ * @typedef {String} shortPlusCodeString
+ * @description The least significant digits of a plus code which are relative to a
+ *   reference point, followed by `comma`, `space` and the name of the reference point.
+ * @example G8+7GV, Hoxton, England
+ */
+
+/**
+ * @typedef {String} OSGRString
+ * @description An OS grid reference in human readable form:
+ * 3, 4, or 5 digit reference, two upper case alphabetics followed by two groups of 3, 4, or 5 digits.
+ * @example NY 12345 67890
+ * @example ST123456
+ */
+
+/**
+ * Location utility class. Acts as an abstraction for everything we need to know about a location:
+ * * Fetching it from the Geolocation API
+ * * Initialising it from OLC codes, OS Grid ref, or lan/lon
+ * * Querying it as long or short OLC codes, OSGR or lat/lon
+ * * Generating a short OLC code by referencing the internal places database in places.json
+ * 
+ * Many of these functions could be performed more succinctly by calling external services, but
+ * this class was developed for use in an application which needs to run in an environment where there may
+ * be no connectivity. The only dependency is on places.json in the current source tree.
+ */
+class Location {
+
+
+  /**
+   * Creates an instance of Location.
+   * It can either be created as an un-initialised container, in which case a later call on the
+   * queryDevice() method is used to populate it with the device location from the geolocation API,
+   * or we can instantiate it with various forms of location anchor:
+   * 
+   * * _latitude, longitude, altitude, accuracy_: Decimal degrees of position using WGS84 (GPS) Datum</li>
+   * * _Full Open Location Code_
+   * * _Short Location Code, with placename reference_
+   * * _OS Grid Reference_ 3, 4, or 5 digit reference in the form "NY 12345 67890"
+   * 
+   * Once set, Locations are immutable by design, there is no "set" or "update" method. This may or
+   * may not be a good design decision. In particular, there are use cases where the location should
+   * track a moving device.
+   *
+   * @constructor
+   * @param {Position|plusCodeString|shortPlusCodeString|OSGRString} [location] If passed then the new location
+   *     instance will be initialised to these coordinates.
+   */
   constructor(...params) {
 
     let [latitude, longitude, altitude, accuracy] = (params.length >= 2 && params) || [];
@@ -22,7 +82,7 @@ export default class Location {
       let parsed = (typeof params[0] === 'string') && Location.parseLocationString(params[0]);
       let { plusCode, osgr } = parsed || {};
       if (plusCode) {
-        let [recovery] = (parsed.places && parsed.places.length === 1 && parsed.places) || [];
+        let [recovery] = (parsed?.places?.length === 1 && parsed.places) || [];
         plusCode = (recovery && OpenLocationCode.recoverNearest(parsed.plusCode, recovery.lat, recovery.long)) || plusCode;
         if (plusCode.length >= 11 && plusCode.indexOf('+') === 8) {
           let area = OpenLocationCode.decode(plusCode);
@@ -30,7 +90,6 @@ export default class Location {
         }
       }
       if (osgr) {
-
         let gridref = new OsGridRef(osgr.easting, osgr.northing);
         ({ latitude, longitude } = gridref.toLatLon());
       }
@@ -38,52 +97,15 @@ export default class Location {
     this._position = latitude != null && longitude != null && { latitude, longitude, altitude, accuracy };
   }
 
-  get isValid() {
-    return this._position?.latitude != null 
-  }
-
-  get latitude() {
-    return this._position?.latitude;
-  }
-  
-  get longitude() {
-    return this._position?.longitude;
-  }
-
-  get accuracy() {
-    return this._position?.accuracy || 0;
-  }
-
-
-
-  get plusCode() {
-    if (!this._position?.latitude)
-      return undefined;
-
-    return this._plusCode || (this._pluscode = OpenLocationCode.encode(
-      this._position.latitude,
-      this._position.longitude,
-      OpenLocationCode.CODE_PRECISION_EXTRA
-    ));
-  }
-
-  get shortCode() {
-    if (!this._position?.latitude)
-      return undefined;
-    if (!this._shortCodes)
-      this._buildShortCodes(this._position);
-    return this._shortCodes[0];
-  }
-
-  get phoneticCode() {
-    return this.shortCode && this._phoneticCodes[0];
-  }
 
   /**
+   * 
+   * Query the GeoLocation API on the current device and initialise the internal representation if successful.
    *
-   *
-   * @return {*} 
-   * @memberof Location
+   * @return {Promise} Resolves when location is retrieved from device
+   *                    rejects on error.
+   * @fulfill {Position}
+   * @reject {Error}
    */
   queryDevice() {
     let geolocation = navigator.geolocation || global.navigator.geolocation;
@@ -100,17 +122,126 @@ export default class Location {
     return this.position;
   }
 
+  /**
+   * Has this instance been initialised with a valid location?
+   *
+   * @type boolean
+   * @readonly
+   * @memberof Location
+   */
+  get isValid() {
+    return this._position?.latitude != null;
+  }
+
+  /**
+   * Latitude of represented location
+   *
+   * @type number
+   * @readonly
+   * @memberof Location
+   */
+  get latitude() {
+    return this._position?.latitude;
+  }
+
+  /**
+   *  Longitude of represented location
+   * 
+   * @type number
+   * @readonly
+   * @memberof Location
+   */
+  get longitude() {
+    return this._position?.longitude;
+  }
+
+  /**
+   * The radius of uncertainty for the location, or zero
+   * if unknown or unsupported.
+   * 
+   * Currently only supported for values obtained using #queryDevice
+   *
+   * @type number
+   * @readonly
+   * @memberof Location
+   */
+  get accuracy() {
+    return this._position?.accuracy || 0;
+  }
+
+
+  /**
+   * 
+   * @type plusCodeString
+   * @readonly
+   * @memberof Location
+   */
+  get plusCode() {
+    if (!this._position?.latitude)
+      return undefined;
+
+    return this._plusCode || (this._pluscode = OpenLocationCode.encode(
+      this._position.latitude,
+      this._position.longitude,
+      OpenLocationCode.CODE_PRECISION_EXTRA
+    ));
+  }
+
+  /**
+   *
+   * @type shortPlusCodeString
+   * @readonly
+   */
+  get shortCode() {
+    if (!this._position?.latitude)
+      return undefined;
+    if (!this._shortCodes)
+      this._buildShortCodes(this._position);
+    return this._shortCodes[0];
+  }
+
+  /**
+   * shortCode, transcribed into a string using the NATO phonetic alphabet
+   * for alpha characters and the English word spelling for digits and the `+` sign.
+   * 
+   * @readonly
+   * @type String
+   */
+  get phoneticCode() {
+    return this.shortCode && this._phoneticCodes[0];
+  }
+
+  /**
+   * A list of possible short OLC codes that are valid for this location,
+   * typically sorted in a sensible order:
+   * * shortest codes first
+   * * within codes of same length, nearest location references
+   * * nearest large location (e.g. City)
+   *
+   * @param {number} [num=5] Maximum number of results to return
+   * @return {shortPlusCodeString[]} 
+   */
   shortCodes(num = 5) {
     return this.shortCode && this._shortCodes.slice(0, num);
   }
 
+  /**
+   * List of possible short OLC codes spelt out phonetically
+   * Identical to shortCodes, but alpabetic characters are mapped onto NATO
+   * phonetic alphabet
+   *
+   * @param {number} [num=5]
+   * @return {String[]} 
+   * @memberof Location
+   */
   phoneticCodes(num = 5) {
     return this.shortCode && this._phoneticCodes.slice(0, num);
   }
   /**
-   *
+   * Get the complete list of nearby locations that are candidate shorteners for this location
+   * 
    * @readonly
-   * @memberof Location
+   * @private
    */
   get relatedCodes() {
     if (this._position?.latitude === undefined)
@@ -137,7 +268,7 @@ export default class Location {
    *
    *
    * @param {*} position
-   * @memberof Location
+   * @private
    */
   _buildShortCodes(position) {
 
@@ -214,7 +345,13 @@ export default class Location {
     });
   }
 
-
+  /**
+   * The OS Grid ref in conventional (two alpha tile prefix) format
+   *
+   * @type OSGRString
+   * @readonly
+   * @memberof Location
+   */
   get osGridRef() {
     if (!this._position?.latitude)
       return undefined;
@@ -231,6 +368,34 @@ export default class Location {
     return this._osGridRef;
   }
 
+
+  /**
+   * Object representing a parsed long or short OLC plusCode
+   * @typedef {Object} plusCode
+   * @property {String} plusCode The full or short pluscode
+   * @property {String} separator The separator between the plusCode and any trailing placename (usually ", ")
+   * @property {String} placeName The placename in the input
+   * @property {String} places Places in the internal names database which match placeName
+   */
+
+  /**
+   * Object representing a parsed OS grid reference
+   * @typedef {Object} OSGridRef
+   * @property {number} easting
+   * @property {number} northing
+   */
+  /**
+   * Takes an input string and tries to determine what format it is in and then
+   * parse it to provide a complete or partial location.
+   * 
+   * Currently handles OLC codes and OS grid references, should extend this to include
+   * literal lat/lon.
+   *
+   * @static
+   * @param {plusCodeString|shortPlusCodeString|OSGRString} input
+   * @return {plusCode|OSGridRef} 
+   * @memberof Location
+   */
   static parseLocationString(input) {
     // Is it a pluscode?
     let [, plusCode, separator, placeName] = input.match(
@@ -246,9 +411,9 @@ export default class Location {
           .filter(([key, value]) => key.startsWith(placeName.replace(/, .*/, '').toLowerCase()))
           .map(([key, value]) => places[value])
       });
-    
+
     // Is it an OS Grid Reference
-    let osgr = input.match(/^([H-T][A-Y])? ?([0-9]{3,6}) ?([0-9]{3,6})$/)
+    let osgr = input.match(/^([H-T][A-Y])? ?([0-9]{3,6}) ?([0-9]{3,6})$/);
     if (osgr) {
       try {
         osgr = OsGridRef.parse(input);
@@ -262,7 +427,15 @@ export default class Location {
     return {};
 
   }
-
+  /**
+   * Takes a textual input and generates an array of possible completions, at present targets 
+   * only OLC shortened plus codes, where the completions are possible reference placenames.
+   * 
+   * @static
+   * @param {String} input A partial location
+   * @return {String[]} An array of possible completions
+   * @memberof Location
+   */
   static async autoComplete(input) {
     let suggestions = [];
     let { plusCode, separator, placeName } = Location.parseLocationString(input);
@@ -281,3 +454,6 @@ export default class Location {
     return (suggestions);
   }
 }
+
+
+export default Location;

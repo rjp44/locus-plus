@@ -25,7 +25,11 @@ Thankfully the OLC spec allows a truncated code to be be used, along with a refe
 
 We process the [Ordnance Survey Open Names](https://www.ordnancesurvey.co.uk/business-government/products/open-map-names) data to convert from OSGB to WGS84 Lat/Lon and create an overlay with multiple reference locations spread as evenly as possible over the GB landmass. This gives short OLC codes without having to resort to online services like Google Maps which may not be available when the app is being used because data isn't available.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Most of the location munging is done in the utility class [Location](APIDefinitions.md) in `src/lib`
+
+The UI for the project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+A Progressive Web App serviceWorker allows the application to be used offline, but this does mean you need to take care about caching if developing locally as the usual serviceWorker persistence caveats apply.
 
 ## Available Scripts
 
