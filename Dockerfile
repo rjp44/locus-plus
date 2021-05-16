@@ -1,6 +1,6 @@
 # Really simple Dockerfile to build a react production container which listens on port $PORT
 
-FROM node:12-alpine
+FROM node:14-alpine
 
 EXPOSE $PORT
 
