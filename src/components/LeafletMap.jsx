@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 
 export default React.memo(function LeafletMap(props) {
-  let[map, setMap] = useState(null);
+  let [map, setMap] = useState(null);
   let zoom = 15 - (props.accuracy || 0) / 750;
 
   function Placeholder() {
@@ -23,6 +23,41 @@ export default React.memo(function LeafletMap(props) {
     </div >
     );
   }
+
+  function GoogleLink({ plusCode }) {
+    return plusCode &&
+      <>
+        <a
+          href={`https://www.google.com/maps/place/${encodeURIComponent(plusCode)}`}
+          target="_blank"
+          rel="noreferrer">
+          Open in Google Maps
+    </a>
+      </>;
+  }
+
+  function Accuracy({ accuracy }) {
+    return accuracy ?
+      <>
+        Accurate to {accuracy}m
+      </>
+      :
+      '';
+  }
+  function OSLink({ latitude, longitude, osGridRef }) {
+    console.log({ latitude, longitude, osGridRef });
+    return osGridRef ?
+      <>
+        <a
+          href={`https://osmaps.ordnancesurvey.co.uk/${latitude},${longitude},18/pin`}
+          target="_blank"
+          rel="noreferrer">
+          Open in OSMaps
+        </a>
+      </>
+      : '';
+  }
+
 
   useEffect(() => {
     // MapContainer doesn't re-render to reset any user induced pan/zoom when
@@ -48,7 +83,11 @@ export default React.memo(function LeafletMap(props) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Marker position={[props.latitude, props.longitude]}>
-        <Popup>{props.plusCode + (props.accuracy ? `, accurate to ${props.accuracy}m` : '')}</Popup>
+        <Popup>
+          {props.plusCode} {props.mapLinks && <GoogleLink {...props} />}<br />
+          {props.osGridRef} {props.mapLinks && <OSLink {...props} />}<br />
+          <Accuracy {...props} />
+        </Popup>
       </Marker>
       <Circle center={[props.latitude, props.longitude]} radius={props.accuracy} />
     </MapContainer>

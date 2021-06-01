@@ -57,7 +57,13 @@ export default function Console(props) {
       </Grid>
       <Grid item xs={12} className={classes.hog}>
         {location?.latitude ?
-          <LeafletMap latitude={location.latitude} longitude={location.longitude} plusCode={location.plusCode} accuracy={0} />
+          <LeafletMap
+            latitude={location.latitude}
+            longitude={location.longitude}
+            plusCode={location.plusCode}
+            osGridRef={location.osGridRef}
+            mapLinks={true}
+            accuracy={0} />
           : <div>
             <Typography variant="h6">Enter a valid location string in the input area above to see a map location</Typography>
             <Typography variant="body1">This can be a short pluscode from the locator app with completions like:<br />
