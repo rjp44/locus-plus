@@ -48,7 +48,7 @@ export default React.memo(function LeafletMap(props) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Marker position={[props.latitude, props.longitude]}>
-        <Popup>{props.plusCode}, accurate to {props.accuracy}m </Popup>
+        <Popup>{props.plusCode + (props.accuracy ? `, accurate to ${props.accuracy}m` : '')}</Popup>
       </Marker>
       <Circle center={[props.latitude, props.longitude]} radius={props.accuracy} />
     </MapContainer>
