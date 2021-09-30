@@ -27,6 +27,9 @@ be no connectivity. The only dependency is on places.json in the current source 
 <dd><p>The least significant digits of a plus code which are relative to a
   reference point, followed by <code>comma</code>, <code>space</code> and the name of the reference point.</p>
 </dd>
+<dt><a href="#vectorFromPlace">vectorFromPlace</a> : <code>Object</code></dt>
+<dd><p>a vector from a known place to this Location instance</p>
+</dd>
 <dt><a href="#OSGRString">OSGRString</a> : <code>String</code></dt>
 <dd><p>An OS grid reference in human readable form:
 3, 4, or 5 digit reference, two upper case alphabetics followed by two groups of 3, 4, or 5 digits.</p>
@@ -64,6 +67,7 @@ be no connectivity. The only dependency is on places.json in the current source 
         * [.plusCode](#Location+plusCode) : [<code>plusCodeString</code>](#plusCodeString)
         * [.shortCode](#Location+shortCode) : [<code>shortPlusCodeString</code>](#shortPlusCodeString)
         * [.phoneticCode](#Location+phoneticCode) : <code>String</code>
+        * [.nearest](#Location+nearest) ⇒ [<code>vectorFromPlace</code>](#vectorFromPlace)
         * [.osGridRef](#Location+osGridRef) : [<code>OSGRString</code>](#OSGRString)
         * [.queryDevice()](#Location+queryDevice) ⇒ <code>Promise</code>
         * [.shortCodes([num])](#Location+shortCodes) ⇒ [<code>Array.&lt;shortPlusCodeString&gt;</code>](#shortPlusCodeString)
@@ -140,6 +144,14 @@ Currently only supported for values obtained using #queryDevice
 ### location.phoneticCode : <code>String</code>
 shortCode, transcribed into a string using the NATO phonetic alphabet
 for alpha characters and the English word spelling for digits and the `+` sign.
+
+**Kind**: instance property of [<code>Location</code>](#Location)  
+**Read only**: true  
+<a name="Location+nearest"></a>
+
+### location.nearest ⇒ [<code>vectorFromPlace</code>](#vectorFromPlace)
+The nearest place to this location, distance, english language direction and precise bearing
+from it to here.
 
 **Kind**: instance property of [<code>Location</code>](#Location)  
 **Read only**: true  
@@ -254,6 +266,21 @@ The least significant digits of a plus code which are relative to a
 ```js
 G8+7GV, Hoxton, England
 ```
+<a name="vectorFromPlace"></a>
+
+## vectorFromPlace : <code>Object</code>
+a vector from a known place to this Location instance
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | The known place name |
+| distance | <code>number</code> | Distance in Metres |
+| bearing | <code>number</code> | Bearing in degrees |
+| direction | <code>String</code> | Rough direction expressed in terms of the four cardinal and       four intercardinal directions (e.g. "North", "SouthWest") |
+
 <a name="OSGRString"></a>
 
 ## OSGRString : <code>String</code>

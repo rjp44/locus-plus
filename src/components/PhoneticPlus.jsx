@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   buttonCenter: {
     position: 'absolute',
     top: 0,
-    marginTop: -12,
+    marginTop: 12,
     width: '100%',
     left: 0
   },
@@ -62,6 +62,14 @@ const useStyles = makeStyles((theme) => ({
   gridRef: {
     position: 'absolute',
     top: 25,
+    width: '70%',
+    right: '15%',
+    background: 'rgba(255, 255, 255, 0.6)',
+    zIndex: 1000
+  },
+  nearest: {
+    position: 'absolute',
+    top: 60,
     width: '70%',
     right: '15%',
     background: 'rgba(255, 255, 255, 0.6)',
@@ -110,7 +118,8 @@ export default function PhoneticPlus(props) {
         phoneticCode: lcn.phoneticCode,
         plusCode: lcn.plusCode,
         phoneticCodes: lcn.phoneticCodes(5),
-        osGridRef: lcn.osGridRef
+        osGridRef: lcn.osGridRef,
+        nearest: lcn.nearest
       });
       let commentary = accuracy && Object.entries(accuracyLevels)
         .find(([key, value]) => (accuracy <= key));
@@ -144,7 +153,8 @@ export default function PhoneticPlus(props) {
       </Grid>}
       <Grid item xs={12} className={classes.hog}>
         {location.isLoaded && <LeafletMap {...location} update={getCount} />}
-        {location.osGridRef && <div className={classes.gridRef}><Typography variant="h6">OS Grid Ref: <b>{location.osGridRef}</b></Typography></div>}
+        {location.osGridRef && <div className={classes.gridRef} data-testid="osgr"><Typography variant="h6">OS Grid Ref: <b>{location.osGridRef}</b></Typography></div>}
+        {location.nearest && <div className={classes.nearest} data-testid="nearest"><Typography variant="h6"><Nearest nearest={location.nearest} /></Typography></div>}
         {location.isLoaded && <div className={classes.locationOverlay}>
           <LocationButton
             getLocation={getLocation}
@@ -187,6 +197,14 @@ export default function PhoneticPlus(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
+  function Nearest({ nearest }) {
+    return nearest ?
+      <>
+        {(nearest.distance / 1000).toPrecision(1)}km {nearest.direction} of {nearest.name}
+      </>
+      : '';
+  }
+
 
   function MySnackbar(props) {
     const classes = useStyles();
@@ -199,6 +217,7 @@ export default function PhoneticPlus(props) {
       setOpen(false);
       props.setConfirmation(false);
     };
+
 
 
     return (

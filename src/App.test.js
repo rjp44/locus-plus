@@ -27,7 +27,8 @@ const locations = [
       'Six Two Two Two Plus Two Two Two, Church Cove, England',
       'Six Two Two Two Plus Two Two Two, Gerrans, England'
     ],
-    'SW 85999 37639'
+    'SW 85999 37639',
+    '2km North of St Just in Roseland, England'
   ],
   [ // We don't have location references for NI (yet) so no shortcode
     54.818105429866606, -7.028511272251086,
@@ -36,7 +37,7 @@ const locations = [
       'Nine Charlie Six Juliet Romeo Xray Nine Charlie Plus Six Hotel Xray',
       'Nine Charlie Six Juliet Romeo Xray Nine Charlie Plus Six Hotel Xray'
     ], 
-    'NV 77107 58626'
+    'NV 77107 58626',
   ],
   [
     51.52573553231748, -0.08370366791166943,
@@ -47,7 +48,8 @@ const locations = [
       'Golf Eight Plus Seven Golf Victor, Spitalfields, England',
       'Golf Eight Plus Seven Golf Victor, De Beauvoir Town, England'
     ],
-    'TQ 33035 82498'
+    'TQ 33035 82498',
+    '0.5km South of Hoxton, England'
   ],
   [
     55.57626681325015, -5.145275200193704,
@@ -58,7 +60,8 @@ const locations = [
       'Hotel Victor Golf Three Plus Golf Victor Five, North Corriegills, Scotland',
       'Hotel Victor Golf Three Plus Golf Victor Five, Rothesay, Scotland'
     ],
-    'NS 01823 35892'
+    'NS 01823 35892',
+    '0.3km Southeast of Brodick, Scotland'
   ],
   [
     54.5278259786839, -1.169575190522096,
@@ -69,7 +72,8 @@ const locations = [
       'Golf Romeo Hotel Juliet Plus Four Five Mike, Marton, England',
       'Golf Romeo Hotel Juliet Plus Four Five Mike, Saltburn-by-the-Sea, England'
     ],
-    'NZ 53841 15044'
+    'NZ 53841 15044',
+    '0.7km North of Nunthorpe, England'
   ],
   [
     54.40549317980326, -3.0179045138661884,
@@ -81,6 +85,7 @@ const locations = [
       'Charlie Xray Four Juliet Plus Five Romeo Xray, Keswick, England'
     ],
     'NY 34023 01592',
+    '2km North of Knipe Fold, England'
   ],
   [
     54.4653840350444, -3.1939199054890866,
@@ -92,6 +97,7 @@ const locations = [
       'Foxtrot Romeo Eight Four Plus Five Charlie Four, Cockermouth, England'
     ],
     'NY 22711 08435',
+    '4km South of Seathwaite, England'
   ],
   [
     57.5671020359238, -4.932249419163916,
@@ -103,6 +109,7 @@ const locations = [
       'Hotel Three Eight Nine Plus Romeo Four Romeo, Auchindrean, Scotland'
     ],
     'NH 24716 56792',
+    '5km South of Achanalt, Scotland'
   ],
   [ // Salt Lake UT Airport: Checks we silently ignore an OSGR OOB error
     40.798513673669625, -111.97667318876773,
@@ -110,7 +117,18 @@ const locations = [
       'Eight Five Golf Charlie Quebec Two Xray Foxtrot Plus Charlie Eight Four'
     ]
   ],
-  
+  [
+    51.518784, -0.143831,
+    [
+      'Golf Victor Nine Four Plus Golf Foxtrot Seven, Hyde Park Corner, England',
+      'Golf Victor Nine Four Plus Golf Foxtrot Seven, London, England',
+      'Golf Victor Nine Four Plus Golf Foxtrot Seven, City of Westminster, England',
+      'Golf Victor Nine Four Plus Golf Foxtrot Seven, Belgravia, England',
+      'Golf Victor Nine Four Plus Golf Foxtrot Seven, Lisson Grove, England'
+    ],
+    'TQ 28884 81617',
+    '2km North of Hyde Park Corner, England'
+  ]
 ];
 
 
@@ -131,7 +149,7 @@ test('renders initial empty location', () => {
 
 for (let location of locations) {
   let unmount;
-  let [latitude, longitude, results, osgr] = location;
+  let [latitude, longitude, results, osgr, nearest] = location;
   test(`renders ${[latitude, longitude]} correctly`, async () => {
 
     global.navigator.geolocation.getCurrentPosition.mockImplementation((cb, errcb) => cb({ coords: { latitude, longitude, accuracy: 40 } }));
@@ -149,7 +167,10 @@ for (let location of locations) {
     };
     if (osgr)
       // eslint-disable-next-line jest/no-conditional-expect
-      expect(screen.getByText(osgr)).toBeInTheDocument();
+      expect(screen.getByTestId('osgr')).toHaveTextContent(osgr);
+    if (nearest)
+      // eslint-disable-next-line jest/no-conditional-expect
+      expect(screen.getByTestId('nearest')).toHaveTextContent(nearest);
     unmount();
   });
 }

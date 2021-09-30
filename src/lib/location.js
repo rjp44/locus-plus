@@ -1,5 +1,7 @@
 import OpenLocationCode from "open-location-code/js/src/openlocationcode.js";
 import OsGridRef, { LatLon } from 'geodesy/osgridref.js';
+import SpLatLon from 'geodesy/latlon-spherical.js';
+
 import phonetic from "alpha-bravo";
 
 let places = require("../places.json");
@@ -29,6 +31,15 @@ places.byName = Object.fromEntries(
  * @description The least significant digits of a plus code which are relative to a
  *   reference point, followed by `comma`, `space` and the name of the reference point.
  * @example G8+7GV, Hoxton, England
+ */
+/**
+ * @typedef {Object} vectorFromPlace
+ * @description a vector from a known place to this Location instance
+ * @property {String} name  The known place name
+ * @property {number} distance Distance in Metres
+ * @property {number} bearing Bearing in degrees
+ * @property {String} direction  Rough direction expressed in terms of the four cardinal and
+ *       four intercardinal directions (e.g. "North", "SouthWest")
  */
 
 /**
@@ -237,6 +248,26 @@ class Location {
   phoneticCodes(num = 5) {
     return this.shortCode && this._phoneticCodes.slice(0, num);
   }
+
+
+  /**
+   * 
+   * The nearest place to this location, distance, english language direction and precise bearing
+   * from it to here.
+   * 
+   * @type nearest
+   * @return {vectorFromPlace}
+   * @readonly
+   */
+  get nearest() {
+    if (!this._position?.latitude)
+      return undefined;
+    if (!this._nearest)
+      this._buildShortCodes(this._position);
+
+    return this._nearest && this._nearest[0];
+  }
+
   /**
    * Get the complete list of nearby locations that are candidate shorteners for this location
    * 
@@ -312,6 +343,20 @@ class Location {
       return res;
     });
     references = [];
+    let nearest = distance.map(r => {
+      let [from, to] = [new SpLatLon(r.lat, r.long), new SpLatLon(latitude, longitude)];
+      let distance = from.distanceTo(to);
+      let bearing = from.initialBearingTo(to);
+      return {
+        name: `${r.name}, ${r.country}`,
+        // The rough distances we calculated for sorting was actually square of distance
+        distance,
+        bearing,
+        direction: ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest', 'North'][Math.round(bearing / 45)]
+      };
+    })
+    .filter(
+      (r) => !(seenCode[r.name] || !(seenCode[r.name] = true)));
 
     while (distance.length || size.length) {
       references.push(distance.shift());
@@ -328,7 +373,8 @@ class Location {
       // remove dups
       .filter(
         (r) => !(seenCode[r.shortCode] || !(seenCode[r.shortCode] = true))
-      );
+    );
+
 
     let [shortCodes, phoneticCodes] = [
       references.map((r) => r.shortCode),
@@ -340,6 +386,7 @@ class Location {
     Object.assign(this, {
       _shortCodes: shortCodes,
       _phoneticCodes: phoneticCodes,
+      _nearest: nearest,
       _shortCode: shortCodes[0],
       _phoneticCode: phoneticCodes[0],
     });
